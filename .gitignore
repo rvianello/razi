@@ -1,0 +1,5 @@
+*.py[co]
+*~
+build/
+razi.egg-info/
+
