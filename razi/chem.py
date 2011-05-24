@@ -1,30 +1,12 @@
-from sqlalchemy import Column, Table
+from sqlalchemy import Column
 from sqlalchemy.orm import column_property
 from sqlalchemy.orm.interfaces import AttributeExtension
-from sqlalchemy.sql.expression import Alias
+from sqlalchemy.orm.properties import ColumnProperty
 from sqlalchemy.sql import expression
-from sqlalchemy.ext.compiler import compiles
 
-from razi.base import MoleculeBase, _to_mol, ChemicalComparator
+from razi.molecule import _to_mol, Molecule
 from razi.dialect import DialectManager
 from razi.functions import functions
-
-class Molecule(MoleculeBase):
-    """Molecule column type.
-    
-    Converts bind/result values to/from a dialect specific persistent
-    molecule value.
-    
-    """
-    
-    def result_processor(self, dialect, coltype=None):
-        chemical_dialect = DialectManager.get_chemical_dialect(dialect)
-        def process(value):
-            if value is not None:
-                return chemical_dialect.process_result(value, self)
-            else:
-                return value
-        return process
 
 class ChemistryDDL(object):
     """A DDL extension which integrates SQLAlchemy table create/drop 
@@ -80,10 +62,22 @@ class ChemicalAttribute(AttributeExtension):
     converts the incoming value to a molecule expression.
     
     """
-    
     def set(self, state, value, oldvalue, initiator):
         return _to_mol(value)
  
+
+class ChemComparator(ColumnProperty.ColumnComparator):
+    """Intercepts standard Column operators on mapped class attributes
+        and overrides their behavior.
+    """
+    
+    def __getattr__(self, name):
+        return getattr(functions, name)(self)
+        
+    # override the __eq__() operator (allows to use '==' on molecules)
+    def __eq__(self, other): 
+        return functions.equals(self, other)
+
  
 class ChemExtensionColumn(Column):
     pass

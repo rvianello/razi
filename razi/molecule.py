@@ -1,10 +1,9 @@
-from sqlalchemy.orm.properties import ColumnProperty
 from sqlalchemy.sql import expression
-from sqlalchemy.sql.expression import ColumnClause, literal
 from sqlalchemy.types import TypeEngine
 from sqlalchemy.ext.compiler import compiles
 
-from functions import functions, _get_function, BaseFunction
+from razi.dialect import DialectManager
+from razi.functions import functions, _get_function
 
 class MoleculeElement(object):
     """Represents a molecular structure value."""
@@ -50,8 +49,23 @@ class PersistentMoleculeElement(MoleculeElement):
         self.desc = desc
 
     
-class MoleculeBase(TypeEngine):
-    """Base Molecule column type for all spatial databases.
+def _to_mol(value):
+    """Interpret a value as a Molecule-compatible construct."""
+
+    if hasattr(value, '__clause_element__'):
+        return value.__clause_element__()
+    elif isinstance(value, (expression.ClauseElement, MoleculeElement)):
+        return value
+    elif isinstance(value, basestring):
+        return TxtMoleculeElement(value)
+    elif value is None:
+        return None
+    else:
+        raise Exception("Invalid type")
+
+
+class Molecule(TypeEngine):
+    """Molecule column type for chemical databases.
     
     Converts bind/result values to/from a generic Persistent value.
     This is used as a base class and overridden into dialect specific
@@ -62,7 +76,7 @@ class MoleculeBase(TypeEngine):
     
     def __init__(self, chemical_index=True, **kwargs):
         self.chemical_index = chemical_index
-        super(MoleculeBase, self).__init__(**kwargs)
+        super(Molecule, self).__init__(**kwargs)
     
     def bind_processor(self, dialect):
         def process(value):
@@ -77,39 +91,13 @@ class MoleculeBase(TypeEngine):
         return process
         
     def result_processor(self, dialect, coltype=None):
+        chemical_dialect = DialectManager.get_chemical_dialect(dialect)
         def process(value):
             if value is not None:
-                return PersistentMoleculeElement(value)
+                return chemical_dialect.process_result(value, self)
             else:
                 return value
         return process
     
 
-# ORM integration
-
-def _to_mol(value):
-    """Interpret a value as a Molecule-compatible construct."""
-
-    if hasattr(value, '__clause_element__'):
-        return value.__clause_element__()
-    elif isinstance(value, (expression.ClauseElement, MoleculeElement)):
-        return value
-    elif isinstance(value, basestring):
-        return TxtMoleculeElement(value)
-    elif value is None:
-        return None
-    else:
-        raise Exception("Invalid type")
-    
-class ChemicalComparator(ColumnProperty.ColumnComparator):
-    """Intercepts standard Column operators on mapped class attributes
-        and overrides their behavior.
-    """
-    
-    def __getattr__(self, name):
-        return getattr(functions, name)(self)
-        
-    # override the __eq__() operator (allows to use '==' on molecules)
-    def __eq__(self, other): 
-        return functions.equals(self, other)
     
