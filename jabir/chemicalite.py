@@ -1,9 +1,9 @@
 from sqlalchemy import select, func
 
-from razi.base import ChemicalComparator, PersistentMoleculeElement, \
+from jabir.base import ChemicalComparator, PersistentMoleculeElement, \
     TxtMoleculeElement
-from razi.dialect import ChemicalDialect 
-from razi.functions import functions, BaseFunction
+from jabir.dialect import ChemicalDialect 
+from jabir.functions import functions, BaseFunction
 
 from geoalchemy.geometry import GeometryExtensionColumn
 

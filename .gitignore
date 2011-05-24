@@ -1,5 +1,5 @@
 *.py[co]
 *~
 build/
-razi.egg-info/
+jabir.egg-info/
 

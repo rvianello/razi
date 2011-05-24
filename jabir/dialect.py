@@ -1,13 +1,13 @@
 from sqlalchemy.dialects.postgresql.base import PGDialect
 from sqlalchemy.dialects.sqlite.base import SQLiteDialect
-from sqlalchemy.dialects.mysql.base import MySQLDialect
-from sqlalchemy.dialects.oracle.base import OracleDialect
-from sqlalchemy.dialects.mssql.base import MSDialect
+#from sqlalchemy.dialects.mysql.base import MySQLDialect
+#from sqlalchemy.dialects.oracle.base import OracleDialect
+#from sqlalchemy.dialects.mssql.base import MSDialect
 
-from sqlalchemy import func
+#from sqlalchemy import func
 
-from razi.functions import functions
-from razi.base import TxtMoleculeElement
+#from jabir.functions import functions
+#from jabir.molecule import TxtMoleculeElement
 
 class ChemicalDialect(object):
     """This class bundles all required classes and methods to support 
@@ -124,11 +124,11 @@ class DialectManager(object):
     @staticmethod
     def __initialize_dialects():
         #further spatial dialects can be added here
-        from razi.postgresql_rdkit import PostgresRDKitDialect
-        #from razi.chemicalite import ChemicaLiteDialect
-        #from razi.mysql import ?
-        #from razi.oracle import ?
-        #from razi.mssql import ?
+        from jabir.postgresql_rdkit import PostgresRDKitDialect
+        from jabir.chemicalite import ChemicaLiteDialect
+        #from jabir.mysql import ?
+        #from jabir.oracle import ?
+        #from jabir.mssql import ?
             
         DialectManager.__dialects_mapping = {
                 PGDialect: PostgresRDKitDialect,
@@ -155,9 +155,9 @@ class DialectManager(object):
                                       in DialectManager.__dialects().items() 
                                       if isinstance(dialect, main_dialect)]
         
-        if possible_spatial_dialects:
+        if possible_chemical_dialects:
             # take the first possible spatial dialect
-            chem_dialect = possible_spatial_dialects[0]
+            chem_dialect = possible_chemical_dialects[0]
             if chem_dialect not in DialectManager.__chemical_dialect_instances:
                 # if there is no instance for the given dialect yet, create one
                 chem_dialect_instance = chem_dialect()
@@ -167,5 +167,5 @@ class DialectManager(object):
             return DialectManager.__chemical_dialect_instances[chem_dialect]
         else:
             raise NotImplementedError('Dialect "%s" is not supported by '
-                                      'Razi' % (dialect.name))
+                                      'Jabir' % (dialect.name))
         
