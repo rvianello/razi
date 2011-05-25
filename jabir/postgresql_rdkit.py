@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 from sqlalchemy import select, func, and_
 
-from jabir.base import ChemicalComparator, PersistentMoleculeElement, \
-    TxtMoleculeElement
+from jabir.chem import ChemComparator
+from jabir.molecule import PersistentMoleculeElement, TxtMoleculeElement
 from jabir.dialect import ChemicalDialect 
 from jabir.functions import functions, BaseFunction
 
-class PostgresRDKitComparator(ChemicalComparator):
+class PostgresRDKitComparator(ChemComparator):
     """Comparator class used for PostgreSQL+RDKit
     """
     def __getattr__(self, name):
         try:
-            return ChemicalComparator.__getattr__(self, name)
+            return ChemComparator.__getattr__(self, name)
         except AttributeError:
             return getattr(pgrdkit_functions, name)(self)
 

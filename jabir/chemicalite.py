@@ -1,19 +1,25 @@
 from sqlalchemy import select, func
 
-from jabir.base import ChemicalComparator, PersistentMoleculeElement, \
-    TxtMoleculeElement
+from jabir.chem import ChemComparator
+from jabir.molecule import PersistentMoleculeElement, TxtMoleculeElement
 from jabir.dialect import ChemicalDialect 
 from jabir.functions import functions, BaseFunction
 
-from geoalchemy.geometry import GeometryExtensionColumn
+def _configure_connection(connection):
+    # FIXME - name of extension modules shouldn't be hardcoded
+    signtree = 'libsigntree.so'
+    chemicalite = 'libchemicalite.so'
+    connection.enable_load_extension(True)
+    connection.load_extension(signtree)
+    connection.load_extension(chemicalite)
 
 
-class ChemicaLiteComparator(ChemicalComparator):
+class ChemicaLiteComparator(ChemComparator):
     """Comparator class used for ChemicaLite
     """
     def __getattr__(self, name):
         try:
-            return ChemicalComparator.__getattr__(self, name)
+            return ChemComparator.__getattr__(self, name)
         except AttributeError:
             return getattr(chemicalite_functions, name)(self)
 
@@ -63,10 +69,14 @@ class ChemicaLiteDialect(ChemicalDialect):
             # bind.execute(select([func.DisableChemicalIndex(table.name, column.name)]).execution_options(autocommit=True))
             # drop the index virtual table
             # bind.execute("DROP TABLE idx_%s_%s" % (table.name, column.name));
-    
+            pass
+
     def handle_ddl_after_create(self, bind, table, column):
         if column.type.spatial_index:
             # call chemicalite function that creates the index virtual table and triggers
             # bind.execute("SELECT CreateChemicalIndex('%s', '%s')" % (table.name, column.name))
             # bind.execute("VACUUM %s" % table.name) ?
+            pass
+
+
     
