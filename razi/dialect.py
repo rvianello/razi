@@ -6,8 +6,8 @@ from sqlalchemy.dialects.sqlite.base import SQLiteDialect
 
 #from sqlalchemy import func
 
-#from jabir.functions import functions
-#from jabir.molecule import TxtMoleculeElement
+#from razi.functions import functions
+#from razi.molecule import TxtMoleculeElement
 
 class ChemicalDialect(object):
     """This class bundles all required classes and methods to support 
@@ -124,11 +124,11 @@ class DialectManager(object):
     @staticmethod
     def __initialize_dialects():
         #further spatial dialects can be added here
-        from jabir.postgresql_rdkit import PostgresRDKitDialect
-        from jabir.chemicalite import ChemicaLiteDialect
-        #from jabir.mysql import ?
-        #from jabir.oracle import ?
-        #from jabir.mssql import ?
+        from razi.postgresql_rdkit import PostgresRDKitDialect
+        from razi.chemicalite import ChemicaLiteDialect
+        #from razi.mysql import ?
+        #from razi.oracle import ?
+        #from razi.mssql import ?
             
         DialectManager.__dialects_mapping = {
                 PGDialect: PostgresRDKitDialect,
@@ -167,5 +167,5 @@ class DialectManager(object):
             return DialectManager.__chemical_dialect_instances[chem_dialect]
         else:
             raise NotImplementedError('Dialect "%s" is not supported by '
-                                      'Jabir' % (dialect.name))
+                                      'Razi' % (dialect.name))
         

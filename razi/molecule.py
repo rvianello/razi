@@ -2,8 +2,8 @@ from sqlalchemy.sql import expression
 from sqlalchemy.types import TypeEngine
 from sqlalchemy.ext.compiler import compiles
 
-from jabir.dialect import DialectManager
-from jabir.functions import functions, _get_function
+from razi.dialect import DialectManager
+from razi.functions import functions, _get_function
 
 class MoleculeElement(object):
     """Represents a molecular structure value."""

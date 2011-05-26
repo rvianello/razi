@@ -13,7 +13,7 @@ def parse_clause(clause, compiler):
     clause element is returned.
         
     """
-    from jabir.base import MoleculeElement, TxtMoleculeElement
+    from razi.base import MoleculeElement, TxtMoleculeElement
     
     if hasattr(clause, '__clause_element__'):
         # for example a column name
@@ -37,7 +37,7 @@ def _get_function(element, compiler, params, within_column_clause):
     is looked up and a executable sqlalchemy.sql.expression.Function object 
     is returned.
     """
-    from jabir.dialect import DialectManager 
+    from razi.dialect import DialectManager 
     chemical_dialect = DialectManager.get_chemical_dialect(compiler.dialect)
     function_data = chemical_dialect.get_function(element.__class__)
     
@@ -118,7 +118,7 @@ def __compile_base_function(element, compiler, **kw):
     params = [parse_clause(argument, compiler) 
               for argument in element.arguments]
     
-    from jabir.dialect import DialectManager 
+    from razi.dialect import DialectManager 
     chemical_dialect = DialectManager.get_chemical_dialect(compiler.dialect)
     
     if chemical_dialect.is_member_function(element.__class__):

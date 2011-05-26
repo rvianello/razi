@@ -2,7 +2,7 @@
 
 from setuptools import setup, find_packages
 
-setup(name='jabir',
+setup(name='razi',
       version='0.0.0',
       description='',
       #url='',

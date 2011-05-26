@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 from sqlalchemy import select, func, and_
 
-from jabir.chem import ChemComparator
-from jabir.molecule import PersistentMoleculeElement, TxtMoleculeElement
-from jabir.dialect import ChemicalDialect 
-from jabir.functions import functions, BaseFunction
+from razi.chem import ChemComparator
+from razi.molecule import PersistentMoleculeElement, TxtMoleculeElement
+from razi.dialect import ChemicalDialect 
+from razi.functions import functions, BaseFunction
 
 class PostgresRDKitComparator(ChemComparator):
     """Comparator class used for PostgreSQL+RDKit

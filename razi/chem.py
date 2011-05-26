@@ -4,9 +4,9 @@ from sqlalchemy.orm.interfaces import AttributeExtension
 from sqlalchemy.orm.properties import ColumnProperty
 from sqlalchemy.sql import expression
 
-from jabir.molecule import _to_mol, Molecule
-from jabir.dialect import DialectManager
-from jabir.functions import functions
+from razi.molecule import _to_mol, Molecule
+from razi.dialect import DialectManager
+from razi.functions import functions
 
 class ChemistryDDL(object):
     """A DDL extension which integrates SQLAlchemy table create/drop 
