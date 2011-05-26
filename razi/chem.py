@@ -8,55 +8,6 @@ from razi.molecule import _to_mol, Molecule
 from razi.dialect import DialectManager
 from razi.functions import functions
 
-class ChemistryDDL(object):
-    """A DDL extension which integrates SQLAlchemy table create/drop 
-    methods with column management functions of chemical databases.
-    
-    Usage::
-    
-        sometable = Table('sometable', metadata, ...)
-        
-        ChemistryDDL(sometable)
-
-        sometable.create()
-    
-    """
-    
-    def __init__(self, table):
-        for event in ('before-create', 'after-create', 
-                      'before-drop', 'after-drop'):
-            table.ddl_listeners[event].append(self)
-        self._stack = []
-        
-    def __call__(self, event, table, bind):
-        chemical_dialect = DialectManager.get_chemical_dialect(bind.dialect)
-        if event in ('before-create', 'before-drop'):
-            """Remove chemistry column from column list (table._columns), 
-            so that it does not show up in the create statement 
-            ("create table tab (..)"). Afterwards (on event 'after-create') 
-            restore the column list from self._stack.
-            """
-            regular_cols = [c for c in table.c 
-                            if not isinstance(c.type, Molecule)]
-            chem_cols = set(table.c).difference(regular_cols)
-            self._stack.append(table.c)
-            table._columns = expression.ColumnCollection(*regular_cols)
-            
-            if event == 'before-drop':
-                for c in chem_cols:
-                    chemical_dialect.handle_ddl_before_drop(bind, table, c)
-                
-        elif event == 'after-create':
-            table._columns = self._stack.pop()
-            
-            for c in table.c:
-                if isinstance(c.type, Molecule):
-                    chemical_dialect.handle_ddl_after_create(bind, table, c)
-
-        elif event == 'after-drop':
-            table._columns = self._stack.pop()
-
-
 class ChemicalAttribute(AttributeExtension):
     """Intercepts 'set' events on a mapped instance attribute and 
     converts the incoming value to a molecule expression.

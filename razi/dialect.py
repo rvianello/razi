@@ -1,3 +1,6 @@
+from sqlalchemy import schema as _schema
+from sqlalchemy import event as _event
+from sqlalchemy import pool as _pool
 from sqlalchemy.dialects.postgresql.base import PGDialect
 from sqlalchemy.dialects.sqlite.base import SQLiteDialect
 #from sqlalchemy.dialects.mysql.base import MySQLDialect
@@ -93,19 +96,40 @@ class ChemicalDialect(object):
         raise NotImplementedError("Method ChemicalDialect.db_column_type must "
                                   "be implemented in subclasses.")
         
-    def handle_ddl_after_create(self, bind, table, column):
+    def handle_ddl_after_create(self, table, connection):
         """This method is called after the mapped table was created in the 
-        database by SQLAlchemy. It is used to create a geometry column for 
-        the created table.
+        database by SQLAlchemy.
         """
-        pass
+        from razi.molecule import Molecule
+        chemical_cols = [c for c in table.c if isinstance(c.type, Molecule)]
+        for c in chemical_cols:
+            self._ddl_after_create(table, c, connection.engine)
+            
+    def _ddl_after_create(self, table, column, bind):
+        """This method is called on chemical columns after the mapped table 
+        was created in the database by SQLAlchemy.
+        """
+        raise NotImplementedError("Method "
+                                  "ChemicalDialect._ddl_after_create must "
+                                  "be implemented in subclasses.")
     
-    def handle_ddl_before_drop(self, bind, table, column):
-        """This method is called after the mapped table was deleted from the
-        database by SQLAlchemy. It can be used to delete the geometry column.
+    def handle_ddl_before_drop(self, table, connection):
+        """This method is called before the mapped table is dropped from the
+        database by SQLAlchemy.
         """
-        pass
+        from razi.molecule import Molecule
+        chemical_cols = [c for c in table.c if isinstance(c.type, Molecule)]
+        for c in chemical_cols:
+            self._ddl_before_drop(table, c, connection.engine)
 
+    def _ddl_before_drop(self, table, column, bind):
+        """This method is called on chemical columns before the mapped table 
+        is dropped from the database by SQLAlchemy.
+        """
+        raise NotImplementedError("Method "
+                                  "ChemicalDialect._ddl_before drop must "
+                                  "be implemented in subclasses.")
+    
 
 class DialectManager(object):
     """This class is responsible for finding a chemical dialect (e.g. 
@@ -173,3 +197,26 @@ class DialectManager(object):
             raise NotImplementedError('Dialect "%s" is not supported by '
                                       'Razi' % (dialect.name))
         
+        
+# custom configuration of db connections
+
+@_event.listens_for(_pool.Pool, "connect")
+def _configure_connection(dbapi_conn, conn_record):
+    module_name = dbapi_conn.__class__.__module__.split('.')[0].lower()
+    if module_name.find('sqlite') >= 0: 
+        # sqlite3 or pysqlite2
+        from razi import chemicalite
+        chemicalite._configure_connection(dbapi_conn)
+       
+# custom ddl code
+
+@_event.listens_for(_schema.Table, "after_create")
+def _handle_ddl_after_create(table, connection, **kwargs):
+    chemical_dialect = DialectManager.get_chemical_dialect(connection.dialect)
+    chemical_dialect.handle_ddl_after_create(table, connection)
+    
+@_event.listens_for(_schema.Table, "before_drop")
+def _handle_ddl_before_drop(table, connection, **kwargs):
+    chemical_dialect = DialectManager.get_chemical_dialect(connection.dialect)
+    chemical_dialect.handle_ddl_before_drop(table, connection)
+    

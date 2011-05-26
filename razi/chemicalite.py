@@ -70,19 +70,26 @@ class ChemicaLiteDialect(ChemicalDialect):
         raise NotImplementedError("DB column for type %s not supported by the "
                                   "current chemical dialect " % type(type_))
 
-    def handle_ddl_before_drop(self, bind, table, column):
+    def _ddl_after_create(self, table, column, bind):
+        """This method is called on chemical columns after the mapped table 
+        was created in the database by SQLAlchemy.
+        """
+        if column.type.chemical_index:
+            # call chemicalite function that creates the index virtual table 
+            # and triggers
+            q = select([func.mol_structural_index(table.name, column.name)])
+            bind.execute(q)
+    
+    def _ddl_before_drop(self, table, column, bind):
+        """This method is called on chemical columns before the mapped table 
+        is dropped from the database by SQLAlchemy.
+        """
+        import pdb; pdb.set_trace()
         if column.type.chemical_index:
             # call chemicalite function that drops the triggers
             # bind.execute(select([func.DisableChemicalIndex(table.name, column.name)]).execution_options(autocommit=True))
             # drop the index virtual table
             # bind.execute("DROP TABLE idx_%s_%s" % (table.name, column.name));
-            pass
-
-    def handle_ddl_after_create(self, bind, table, column):
-        if column.type.spatial_index:
-            # call chemicalite function that creates the index virtual table and triggers
-            # bind.execute("SELECT CreateChemicalIndex('%s', '%s')" % (table.name, column.name))
-            # bind.execute("VACUUM %s" % table.name) ?
             pass
 
 
