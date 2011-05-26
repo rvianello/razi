@@ -86,9 +86,13 @@ class ChemicalDialect(object):
         transformed into a MoleculeElement object. 
         
         """
-        raise NotImplementedError("Method SpatialDialect.process_result must "
+        raise NotImplementedError("Method ChemicalDialect.process_result must "
                                   "be implemented in subclasses.")
     
+    def db_column_type(self, type_):
+        raise NotImplementedError("Method ChemicalDialect.db_column_type must "
+                                  "be implemented in subclasses.")
+        
     def handle_ddl_after_create(self, bind, table, column):
         """This method is called after the mapped table was created in the 
         database by SQLAlchemy. It is used to create a geometry column for 

@@ -1,7 +1,8 @@
 from sqlalchemy import select, func
 
 from razi.chem import ChemComparator
-from razi.molecule import PersistentMoleculeElement, TxtMoleculeElement
+from razi.molecule import Molecule, \
+    PersistentMoleculeElement, TxtMoleculeElement
 from razi.dialect import ChemicalDialect 
 from razi.functions import functions, BaseFunction
 
@@ -63,6 +64,12 @@ class ChemicaLiteDialect(ChemicalDialect):
     def process_result(self, value, type):
         return ChemicaLitePersistentSpatialElement(TxtMoleculeElement(value))
     
+    def db_column_type(self, type_):
+        if isinstance(type_, Molecule):
+            return 'MOLECULE'
+        raise NotImplementedError("DB column for type %s not supported by the "
+                                  "current chemical dialect " % type(type_))
+
     def handle_ddl_before_drop(self, bind, table, column):
         if column.type.chemical_index:
             # call chemicalite function that drops the triggers

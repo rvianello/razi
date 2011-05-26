@@ -1,5 +1,5 @@
 from sqlalchemy.sql import expression
-from sqlalchemy.types import TypeEngine
+from sqlalchemy.types import UserDefinedType
 from sqlalchemy.ext.compiler import compiles
 
 from razi.dialect import DialectManager
@@ -64,7 +64,7 @@ def _to_mol(value):
         raise Exception("Invalid type")
 
 
-class Molecule(TypeEngine):
+class Molecule(UserDefinedType):
     """Molecule column type for chemical databases.
     
     Converts bind/result values to/from a generic Persistent value.
@@ -99,5 +99,11 @@ class Molecule(TypeEngine):
                 return value
         return process
     
-
+    
+@compiles(Molecule)
+def _compile_molecule(type_, compiler, **kwargs):
+    chemical_dialect = DialectManager.get_chemical_dialect(compiler.dialect)
+    return chemical_dialect.db_column_type(type_)
+    
+    
     
