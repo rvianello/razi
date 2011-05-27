@@ -38,7 +38,6 @@ class TxtMoleculeElement(MoleculeElement, expression.Function):
 def __compile_txtmoleculeelement(element, compiler, **kw):
     function = _get_function(element, compiler, [element.desc], 
                              kw.get('within_columns_clause', False))
-    
     return compiler.process(function)
 
 

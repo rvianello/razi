@@ -54,6 +54,7 @@ class ChemicaLiteDialect(ChemicalDialect):
     """Implementation of ChemicalDialect for ChemicaLite."""
     
     __functions = { 
+        TxtMoleculeElement: 'mol',
         #functions.func1: 'Func1',
         #chemicalite_functions.func2 : 'Func2',
         }
@@ -62,7 +63,7 @@ class ChemicaLiteDialect(ChemicalDialect):
         return ChemicaLiteDialect.__functions
     
     def process_result(self, value, type):
-        return ChemicaLitePersistentSpatialElement(TxtMoleculeElement(value))
+        return ChemicaLitePersistentSpatialElement(value)
     
     def db_column_type(self, type_):
         if isinstance(type_, Molecule):
