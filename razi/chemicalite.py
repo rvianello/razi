@@ -4,7 +4,7 @@ from razi.chem import ChemComparator
 from razi.molecule import Molecule, \
     PersistentMoleculeElement, TxtMoleculeElement
 from razi.dialect import ChemicalDialect 
-from razi.functions import functions, BaseFunction
+from razi.functions import functions #, BaseFunction
 
 def _configure_connection(connection):
     # FIXME - name of extension modules shouldn't be hardcoded
@@ -55,7 +55,17 @@ class ChemicaLiteDialect(ChemicalDialect):
     
     __functions = { 
         TxtMoleculeElement: 'mol',
-        #functions.func1: 'Func1',
+        functions.smiles: 'mol_smiles',
+        functions.mw: 'mol_mw',
+        functions.logp: 'mol_logp',
+        functions.tpsa: 'mol_tpsa',
+        functions.hba: 'mol_hba',
+        functions.hbd: 'mol_hbd',
+        functions.num_atoms: 'mol_num_atms',
+        functions.num_hetatoms: 'mol_num_hetatms',
+        functions.num_hvy_atoms: 'mol_num_hvyatms',
+        functions.num_rings: 'mol_num_rings',
+        functions.num_rotatable_bonds: 'mol_num_rotatable_bonds',
         #chemicalite_functions.func2 : 'Func2',
         }
     

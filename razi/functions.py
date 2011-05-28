@@ -8,12 +8,15 @@ import types
 def parse_clause(clause, compiler):
     """This method is used to translate a clause element (molecules, 
     functions, ..).
+    
     According to the type of the clause, a conversion to the database 
     molecule type is added or the column clause (column name) or the cascaded 
     clause element is returned.
         
     """
-    from razi.base import MoleculeElement, TxtMoleculeElement
+    from razi.molecule import Molecule
+    from razi.molecule import MoleculeElement, TxtMoleculeElement
+    from razi.molecule import PersistentMoleculeElement
     
     if hasattr(clause, '__clause_element__'):
         # for example a column name
@@ -24,7 +27,9 @@ def parse_clause(clause, compiler):
     elif isinstance(clause, MoleculeElement):
         if isinstance(clause, TxtMoleculeElement):
             return clause
-        return clause.desc
+        elif isinstance(clause, PersistentMoleculeElement):
+            return literal(clause.desc, Molecule)
+        raise NotImplementedError
     elif isinstance(clause, basestring):
         return TxtMoleculeElement(clause)
     
@@ -147,7 +152,7 @@ def __compile_base_function(element, compiler, **kw):
                 compiler.process(chemical), compiler.process(function)      
                 )
             
-    elif database_dialect.is_property(element.__class__):
+    elif chemical_dialect.is_property(element.__class__):
         chemical = params.pop(0)
         function_name = chemical_dialect.get_function(element.__class__)
         
@@ -195,7 +200,49 @@ class functions:
     """Functions that are supported by most databases
     """
     
-    #class func1(BaseFunction):
-    #    """Func(m)"""
-    #    pass
+    class smiles(BaseFunction):
+        pass
+    
+    
+    class mw(BaseFunction):
+        pass
+    
+    
+    class logp(BaseFunction):
+        pass
+    
+    
+    class tpsa(BaseFunction):
+        pass
+    
+    
+    class hba(BaseFunction):
+        pass
+    
+
+    class hbd(BaseFunction):
+        pass
+    
+    
+    class num_atoms(BaseFunction):
+        pass
+    
+    
+    class num_hetatoms(BaseFunction):
+        pass
+    
+    
+    class num_hvy_atoms(BaseFunction):
+        pass
+    
+    
+    class num_rings(BaseFunction):
+        pass
+    
+    
+    class num_rotatable_bonds(BaseFunction):
+        pass
+    
+    
+    
 
