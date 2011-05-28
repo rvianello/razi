@@ -1,7 +1,6 @@
 from sqlalchemy.sql.expression import Function, ClauseElement
 from sqlalchemy.ext.compiler import compiles
 from sqlalchemy import literal
-from sqlalchemy.types import NullType, TypeDecorator
 
 import types
 
@@ -163,38 +162,19 @@ def __compile_base_function(element, compiler, **kw):
                                  kw.get('within_columns_clause', False))
         return compiler.process(function)
 
-def BooleanFunction(function, compare_value = 'TRUE'):
-    """Wrapper for database function that return 'Boolean-like' values.
-    
-    This function adds the necessary comparison to ensure
-    that in the WHERE clause the function is compared to `compare_value`
-    while in the SELECT clause the function result is returned.
-    
-    :param function: The function that needs boolean wrapping
-    :param compare_value: The value that the function should be compare to
-    """
-    def function_handler(params, within_column_clause):
-        return check_comparison(function(*params), within_column_clause, True, 
-                                compare_value)
-    
-    return function_handler
-  
-def check_comparison(function, 
-                     within_column_clause, returns_boolean, compare_value):
-    """Because Oracle and MS SQL do not want to know Boolean and functions 
-    return 0/1 or the string 'TRUE', we manually have to add a comparison, but 
-    only if the function is called inside the where-clause, not in the select 
-    clause.
-    
-    For example:
-    select .. from .. where SDO_EQUAL(.., ..) = 'TRUE'
-    select SDO_EQUAL(.., ..) from ..
-    
-    """
-    if returns_boolean and not within_column_clause:
-        return (function == compare_value)
-    else: 
-        return function
+
+class DialectSpecificFunction(BaseFunction):
+    pass
+
+
+@compiles(DialectSpecificFunction)
+def __compile_dialect_specific_function(element, compiler, **kw):
+    from razi.dialect import DialectManager 
+    chemical_dialect = DialectManager.get_chemical_dialect(compiler.dialect)
+    function = chemical_dialect.get_function(element.__class__)
+    args = list(element.arguments)
+    return compiler.process(function(compiler, element, *args))
+
 
 class functions:
     """Functions that are supported by most databases
@@ -241,6 +221,18 @@ class functions:
     
     
     class num_rotatable_bonds(BaseFunction):
+        pass
+    
+    
+    class equals(DialectSpecificFunction):
+        pass
+    
+    
+    class contains(DialectSpecificFunction):
+        pass
+    
+    
+    class contained_in(DialectSpecificFunction):
         pass
     
     
