@@ -1,7 +1,5 @@
-import operator
-
 from sqlalchemy import Column, select, func
-from sqlalchemy.sql.expression import and_, table, column, text
+from sqlalchemy.sql.expression import and_, table, column
 
 from razi.chem import ChemComparator
 from razi.chemtypes import Molecule
@@ -50,7 +48,7 @@ class chemicalite_functions(functions):
         return table(m1.table.fullname, column("rowid")).c.rowid.in_(
             select([table("str_idx_%s_%s" % (m1.table.fullname, m1.key), 
                           column("id")).c.id])
-                          .where(op(text('s'), func.mol_signature(m2))))
+                          .where(column('s').op(op)(func.mol_signature(m2))))
                             
     @staticmethod
     def _equals(compiler, element, arg1, arg2):
@@ -62,15 +60,13 @@ class chemicalite_functions(functions):
             m1.type.chemical_index:
                 return and_(
                     q1,
-                    chemicalite_functions._str_idx_constraint(m1, m2, 
-                                                              operator.eq))
+                    chemicalite_functions._str_idx_constraint(m1, m2, '='))
         elif isinstance(m2, Column) and \
             isinstance(m2.type, Molecule) and \
             m2.type.chemical_index:
                 return and_(
                     q1,
-                    chemicalite_functions._str_idx_constraint(m2, m1, 
-                                                              operator.eq))
+                    chemicalite_functions._str_idx_constraint(m2, m1, '='))
         else:
             return q1
     
@@ -84,15 +80,13 @@ class chemicalite_functions(functions):
             m1.type.chemical_index:
                 return and_(
                     q1,
-                    chemicalite_functions._str_idx_constraint(m1, m2, 
-                                                              operator.ge))
+                    chemicalite_functions._str_idx_constraint(m1, m2, '>='))
         elif isinstance(m2, Column) and \
             isinstance(m2.type, Molecule) and \
             m2.type.chemical_index:
                 return and_(
                     q1,
-                    chemicalite_functions._str_idx_constraint(m2, m1, 
-                                                              operator.le))
+                    chemicalite_functions._str_idx_constraint(m2, m1, '<='))
         else:
             return q1
     
@@ -106,15 +100,13 @@ class chemicalite_functions(functions):
             m1.type.chemical_index:
                 return and_(
                     q1,
-                    chemicalite_functions._str_idx_constraint(m1, m2, 
-                                                              operator.le))
+                    chemicalite_functions._str_idx_constraint(m1, m2, '<='))
         elif isinstance(m2, Column) and \
             isinstance(m2.type, Molecule) and \
             m2.type.chemical_index:
                 return and_(
                     q1,
-                    chemicalite_functions._str_idx_constraint(m2, m1, 
-                                                              operator.ge))
+                    chemicalite_functions._str_idx_constraint(m2, m1, '>='))
         else:
             return q1
     
