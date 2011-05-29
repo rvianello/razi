@@ -14,8 +14,8 @@ def parse_clause(clause, compiler):
         
     """
     from razi.chemtypes import Molecule
-    from razi.molecule import MoleculeElement, TxtMoleculeElement
-    from razi.molecule import PersistentMoleculeElement
+    from razi.expression import MoleculeElement, TxtMoleculeElement
+    from razi.expression import PersistentMoleculeElement
     
     if hasattr(clause, '__clause_element__'):
         # for example a column name

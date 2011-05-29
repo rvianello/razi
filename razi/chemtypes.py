@@ -3,7 +3,7 @@ from sqlalchemy.types import UserDefinedType
 from sqlalchemy.ext.compiler import compiles
 
 from razi.dialect import DialectManager
-from razi.molecule import MoleculeElement
+from razi.expression import MoleculeElement
 
 class Molecule(UserDefinedType):
     """Molecule column type for chemical databases.

@@ -2,7 +2,7 @@
 from sqlalchemy import select, func, and_
 
 from razi.chem import ChemComparator
-from razi.molecule import PersistentMoleculeElement, TxtMoleculeElement
+from razi.expression import PersistentMoleculeElement, TxtMoleculeElement
 from razi.dialect import ChemicalDialect 
 from razi.functions import functions, BaseFunction
 

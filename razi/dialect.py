@@ -10,7 +10,7 @@ from sqlalchemy.dialects.sqlite.base import SQLiteDialect
 #from sqlalchemy import func
 
 #from razi.functions import functions
-#from razi.molecule import TxtMoleculeElement
+#from razi.expression import TxtMoleculeElement
 
 class ChemicalDialect(object):
     """This class bundles all required classes and methods to support 

@@ -5,7 +5,7 @@ from sqlalchemy.sql.expression import and_, table, column, text
 
 from razi.chem import ChemComparator
 from razi.chemtypes import Molecule
-from razi.molecule import PersistentMoleculeElement, TxtMoleculeElement
+from razi.expression import PersistentMoleculeElement, TxtMoleculeElement
 from razi.dialect import ChemicalDialect 
 from razi.functions import functions, parse_clause #, BaseFunction
 
