@@ -3,7 +3,7 @@ from sqlalchemy.ext.compiler import compiles
 
 from razi.functions import functions, _get_function
 
-class MoleculeElement(object):
+class ChemElement(object):
     """Represents a molecular structure value."""
 
     def __str__(self):
@@ -16,29 +16,39 @@ class MoleculeElement(object):
     def __getattr__(self, name):
         return getattr(functions, name)(self)
 
-
-class TxtMoleculeElement(MoleculeElement, expression.Function):
-    """Represents a Molecule value expressed within application code (a SMILES).
+class TxtChemElement(ChemElement, expression.Function):
+    """Represents a chemical value expressed within application code (e.g a 
+    SMILES string).
     
     Extends expression.Function so that in a SQL expression context the value 
     is interpreted as 'txt_to_mol(value)' or as the equivalent function in 
-    the currently used database.
+    the currently used database as appropriate for the given type.
     """
     
-    def __init__(self, desc, chemical_type='MOLECULE'):
+    def __init__(self, desc):
         assert isinstance(desc, basestring)
         self.desc = desc
-        self.chemical_type = chemical_type
         expression.Function.__init__(self, "")
 
 
-@compiles(TxtMoleculeElement)
-def __compile_txtmoleculeelement(element, compiler, **kw):
+@compiles(TxtChemElement)
+def __compile_txtchemelement(element, compiler, **kw):
     function = _get_function(element, compiler, [element.desc], 
                              kw.get('within_columns_clause', False))
     return compiler.process(function)
 
+    
+class MoleculeElement(object):
+    pass
 
+class TxtMoleculeElement(MoleculeElement, TxtChemElement):
+    """Represents a Molecule value expressed within application code (a SMILES).
+    """
+    
+    def __init__(self, desc):
+        TxtChemElement.__init__(self, desc)
+        
+        
 class PersistentMoleculeElement(MoleculeElement):
     """Represents a Molecule value loaded from the database."""
     
