@@ -4,6 +4,7 @@ from sqlalchemy.sql.expression import and_, table, column
 from razi.chem import ChemComparator
 from razi.chemtypes import Molecule
 from razi.expression import PersistentMoleculeElement, TxtMoleculeElement
+from razi.expression import TxtPatternElement
 from razi.dialect import ChemicalDialect 
 from razi.functions import functions, parse_clause #, BaseFunction
 
@@ -52,8 +53,8 @@ class chemicalite_functions(functions):
                             
     @staticmethod
     def _equals(compiler, element, arg1, arg2):
-        m1 = parse_clause(arg1, compiler)
-        m2 = parse_clause(arg2, compiler)
+        m1 = parse_clause(arg1, compiler, TxtMoleculeElement)
+        m2 = parse_clause(arg2, compiler, TxtMoleculeElement)
         q1 = func.mol_same(m1, m2)
         if isinstance(m1, Column) and \
             isinstance(m1.type, Molecule) and \
@@ -72,8 +73,8 @@ class chemicalite_functions(functions):
     
     @staticmethod
     def _contains(compiler, element, arg1, arg2):
-        m1 = parse_clause(arg1, compiler)
-        m2 = parse_clause(arg2, compiler)
+        m1 = parse_clause(arg1, compiler, TxtMoleculeElement)
+        m2 = parse_clause(arg2, compiler, TxtMoleculeElement)
         q1 = func.mol_is_substruct(m1, m2)
         if isinstance(m1, Column) and \
             isinstance(m1.type, Molecule) and \
@@ -92,8 +93,8 @@ class chemicalite_functions(functions):
     
     @staticmethod
     def _contained_in(compiler, element, arg1, arg2): 
-        m1 = parse_clause(arg1, compiler)
-        m2 = parse_clause(arg2, compiler)
+        m1 = parse_clause(arg1, compiler, TxtMoleculeElement)
+        m2 = parse_clause(arg2, compiler, TxtMoleculeElement)
         q1 = func.mol_substruct_of(m1, m2)
         if isinstance(m1, Column) and \
             isinstance(m1.type, Molecule) and \
@@ -110,12 +111,33 @@ class chemicalite_functions(functions):
         else:
             return q1
     
+    @staticmethod
+    def _matches(compiler, element, arg1, arg2):
+        m1 = parse_clause(arg1, compiler, TxtPatternElement)
+        m2 = parse_clause(arg2, compiler, TxtPatternElement)
+        q1 = func.mol_is_substruct(m1, m2)
+        if isinstance(m1, Column) and \
+            isinstance(m1.type, Molecule) and \
+            m1.type.chemical_index:
+                return and_(
+                    q1,
+                    chemicalite_functions._str_idx_constraint(m1, m2, '>='))
+        elif isinstance(m2, Column) and \
+            isinstance(m2.type, Molecule) and \
+            m2.type.chemical_index:
+                return and_(
+                    q1,
+                    chemicalite_functions._str_idx_constraint(m2, m1, '<='))
+        else:
+            return q1
+    
 
 class ChemicaLiteDialect(ChemicalDialect):
     """Implementation of ChemicalDialect for ChemicaLite."""
     
     __functions = { 
         TxtMoleculeElement: 'mol',
+        TxtPatternElement: 'qmol',
         
         functions.smiles: 'mol_smiles',
         functions.mw: 'mol_mw',
@@ -132,6 +154,7 @@ class ChemicaLiteDialect(ChemicalDialect):
         functions.equals: chemicalite_functions._equals,
         functions.contains: chemicalite_functions._contains,
         functions.contained_in: chemicalite_functions._contained_in, 
+        functions.matches: chemicalite_functions._matches, 
             
         #chemicalite_functions.func2 : 'Func2',
         }

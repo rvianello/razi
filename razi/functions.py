@@ -4,7 +4,7 @@ from sqlalchemy import literal
 
 import types
 
-def parse_clause(clause, compiler):
+def parse_clause(clause, compiler, translate_string):
     """This method is used to translate a clause element (molecules, 
     functions, ..).
     
@@ -16,6 +16,7 @@ def parse_clause(clause, compiler):
     from razi.chemtypes import Molecule
     from razi.expression import MoleculeElement, TxtMoleculeElement
     from razi.expression import PersistentMoleculeElement
+    from razi.expression import PatternElement, TxtPatternElement
     
     if hasattr(clause, '__clause_element__'):
         # for example a column name
@@ -28,9 +29,13 @@ def parse_clause(clause, compiler):
             return clause
         elif isinstance(clause, PersistentMoleculeElement):
             return literal(clause.desc, Molecule)
-        raise NotImplementedError
+        raise TypeError
+    elif isinstance(clause, PatternElement):
+        if isinstance(clause, TxtPatternElement):
+            return clause
+        raise TypeError
     elif isinstance(clause, basestring):
-        return TxtMoleculeElement(clause)
+        return translate_string(clause)
     
     # for raw parameters    
     return literal(clause)
@@ -235,6 +240,9 @@ class functions:
     class contained_in(DialectSpecificFunction):
         pass
     
+    
+    class matches(DialectSpecificFunction):
+        pass
     
     
 

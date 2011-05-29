@@ -55,7 +55,20 @@ class PersistentMoleculeElement(MoleculeElement):
     def __init__(self, desc):
         self.desc = desc
 
+
+class PatternElement(object):
+    pass
+
+
+class TxtPatternElement(PatternElement, TxtChemElement):
+    """Represents a chemical fragment pattern expressed within application code
+    (i.e. a SMARTS string)
+    """
     
+    def __init__(self, desc):
+        TxtChemElement.__init__(self, desc)
+
+
 def _to_mol(value):
     """Interpret a value as a Molecule-compatible construct."""
 
@@ -68,7 +81,7 @@ def _to_mol(value):
     elif value is None:
         return None
     else:
-        raise Exception("Invalid type")
+        raise TypeError
 
 
     
