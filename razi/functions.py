@@ -13,7 +13,7 @@ def parse_clause(clause, compiler):
     clause element is returned.
         
     """
-    from razi.molecule import Molecule
+    from razi.chemtypes import Molecule
     from razi.molecule import MoleculeElement, TxtMoleculeElement
     from razi.molecule import PersistentMoleculeElement
     

@@ -4,7 +4,7 @@ from sqlalchemy.orm.interfaces import AttributeExtension
 from sqlalchemy.orm.properties import ColumnProperty
 from sqlalchemy.sql import expression
 
-from razi.molecule import _to_mol, Molecule
+from razi.molecule import _to_mol
 from razi.dialect import DialectManager
 from razi.functions import functions
 
