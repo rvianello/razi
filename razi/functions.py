@@ -4,7 +4,7 @@ from sqlalchemy import literal
 
 import types
 
-def parse_clause(clause, compiler, translate_string):
+def parse_clause(clause, compiler, translate_string=None):
     """This method is used to translate a clause element (molecules, 
     functions, ..).
     
@@ -34,7 +34,7 @@ def parse_clause(clause, compiler, translate_string):
         if isinstance(clause, TxtPatternElement):
             return clause
         raise TypeError
-    elif isinstance(clause, basestring):
+    elif isinstance(clause, basestring) and translate_string:
         return translate_string(clause)
     
     # for raw parameters    
