@@ -46,10 +46,12 @@ class chemicalite_functions(functions):
 
     @staticmethod
     def _str_idx_constraint(m1, m2, op):
+        idx_tbl = table("str_idx_%s_%s" % (m1.table.fullname, m1.key), 
+                        column("s"), column("id"))
         return table(m1.table.fullname, column("rowid")).c.rowid.in_(
-            select([table("str_idx_%s_%s" % (m1.table.fullname, m1.key), 
-                          column("id")).c.id])
-                          .where(column('s').op(op)(func.mol_signature(m2))))
+            select([idx_tbl.c.id])
+                .where(idx_tbl.c.s.op(op)(func.mol_signature(m2)))
+                )
                             
     @staticmethod
     def _equals(compiler, element, arg1, arg2):
