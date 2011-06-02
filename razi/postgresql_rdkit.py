@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-#from sqlalchemy.sql import select, func, and_
+from sqlalchemy import Column
+from sqlalchemy.sql import column, literal, text, select, func, and_
 from sqlalchemy.ext.compiler import compiles
 
 from razi.chem import ChemComparator
@@ -36,6 +37,66 @@ class pgrdkit_functions(functions):
     """Functions only supported by PostgreSQL+RDKit
     """
     
+    @staticmethod
+    def _equals(compiler, element, arg1, arg2):
+        m1 = parse_clause(arg1, compiler, TxtMoleculeElement)
+        m2 = parse_clause(arg2, compiler, TxtMoleculeElement)
+        if isinstance(m1, Column) and\
+            isinstance(m1.type, Molecule) and \
+            m1.type.chemical_index:
+            return m1.op('@=')(m2)
+        elif isinstance(m2, Column) and\
+            isinstance(m2.type, Molecule) and \
+            m2.type.chemical_index:
+            return m2.op('@=')(m1)
+        else:
+            return func.mol_eq(m1, m2)
+                                      
+    @staticmethod
+    def _contains(compiler, element, arg1, arg2):
+        m1 = parse_clause(arg1, compiler, TxtMoleculeElement)
+        m2 = parse_clause(arg2, compiler, TxtMoleculeElement)
+        if isinstance(m1, Column) and\
+            isinstance(m1.type, Molecule) and \
+            m1.type.chemical_index:
+            return m1.op('@>')(m2)
+        elif isinstance(m2, Column) and\
+            isinstance(m2.type, Molecule) and \
+            m2.type.chemical_index:
+            return m2.op('<@')(m1)
+        else:
+            return func.substruct(m1, m2)
+                                      
+    @staticmethod
+    def _contained_in(compiler, element, arg1, arg2):
+        m1 = parse_clause(arg1, compiler, TxtMoleculeElement)
+        m2 = parse_clause(arg2, compiler, TxtMoleculeElement)
+        if isinstance(m1, Column) and\
+            isinstance(m1.type, Molecule) and \
+            m1.type.chemical_index:
+            return m1.op('<@')(m2)
+        elif isinstance(m2, Column) and\
+            isinstance(m2.type, Molecule) and \
+            m2.type.chemical_index:
+            return m2.op('@>')(m1)
+        else:
+            return func.rsubstruct(m1, m2)
+                                      
+    @staticmethod
+    def _matches(compiler, element, arg1, arg2):
+        m1 = parse_clause(arg1, compiler, TxtPatternElement)
+        m2 = parse_clause(arg2, compiler, TxtPatternElement)
+        if isinstance(m1, Column) and\
+            isinstance(m1.type, Molecule) and \
+            m1.type.chemical_index:
+            return m1.op('@>')(m2)
+        elif isinstance(m2, Column) and\
+            isinstance(m2.type, Molecule) and \
+            m2.type.chemical_index:
+            return m2.op('<@')(m1)
+        else:
+            return func.substruct(m1, m2)
+                                      
     class _Cast(BaseFunction):
         def __init__(self, totype, *args, **kw):
             self.totype = totype
@@ -77,10 +138,10 @@ class PostgresRDKitDialect(ChemicalDialect):
         functions.num_rings: 'mol_numrings',
         functions.num_rotatable_bonds: 'mol_numrotatablebonds',
         
-        #functions.equals: pgrdkit_functions._equals,
-        #functions.contains: pgrdkit_functions._contains,
-        #functions.contained_in: pgrdkit_functions._contained_in, 
-        #functions.matches: pgrdkit_functions._matches,                    
+        functions.equals: pgrdkit_functions._equals,
+        functions.contains: pgrdkit_functions._contains,
+        functions.contained_in: pgrdkit_functions._contained_in, 
+        functions.matches: pgrdkit_functions._matches,                    
         
         #pgrdkit_functions.func2 : 'Func2',
         }
