@@ -2,4 +2,5 @@
 *~
 build/
 razi.egg-info/
+docs/_*
 
