@@ -11,6 +11,7 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
+   sql_exp_lang_tutorial
    database_setup
 
 Indices and tables
