@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from sqlalchemy import Column
 from sqlalchemy.sql import func, cast
-from sqlalchemy.ext.compiler import compiles
 
 from razi.chem import ChemComparator
 from razi.chemtypes import Molecule, QMolecule
