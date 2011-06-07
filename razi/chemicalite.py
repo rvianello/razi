@@ -2,7 +2,7 @@ from sqlalchemy import Column, select, func
 from sqlalchemy.sql.expression import and_, table, column
 
 from razi.chem import ChemComparator
-from razi.chemtypes import Molecule
+from razi.chemtypes import Molecule, QMolecule
 from razi.expression import PersistentMoleculeElement, TxtMoleculeElement
 from razi.expression import TxtQMoleculeElement
 from razi.dialect import ChemicalDialect 
@@ -27,7 +27,7 @@ class ChemicaLiteComparator(ChemComparator):
             return getattr(chemicalite_functions, name)(self)
 
 
-class ChemicaLitePersistentSpatialElement(PersistentMoleculeElement):
+class ChemicaLitePersistentMoleculeElement(PersistentMoleculeElement):
     """Represents a Molecule value as loaded from the database."""
     
     def __init__(self, desc):
@@ -164,12 +164,17 @@ class ChemicaLiteDialect(ChemicalDialect):
     def _get_function_mapping(self):
         return ChemicaLiteDialect.__functions
     
-    def process_result(self, value, type):
-        return ChemicaLitePersistentSpatialElement(value)
+    def process_result(self, value, type_):
+        if isinstance(type_, Molecule):
+            return ChemicaLitePersistentMoleculeElement(value)
+        raise NotImplementedError("DB column for type %s not supported by the "
+                                  "current chemical dialect " % type(type_))
     
     def db_column_type(self, type_):
         if isinstance(type_, Molecule):
             return 'MOLECULE'
+        elif isinstance(type_, QMolecule):
+            return 'QMOLECULE'
         raise NotImplementedError("DB column for type %s not supported by the "
                                   "current chemical dialect " % type(type_))
 

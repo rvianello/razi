@@ -4,7 +4,7 @@ from sqlalchemy.sql import func
 from sqlalchemy.ext.compiler import compiles
 
 from razi.chem import ChemComparator
-from razi.chemtypes import Molecule
+from razi.chemtypes import Molecule, QMolecule
 from razi.expression import PersistentMoleculeElement, \
     TxtMoleculeElement, TxtQMoleculeElement
 from razi.dialect import ChemicalDialect 
@@ -149,12 +149,17 @@ class PostgresRDKitDialect(ChemicalDialect):
     def _get_function_mapping(self):
         return PostgresRDKitDialect.__functions
     
-    def process_result(self, value, type):
-        return PostgresRDKitPersistentMoleculeElement(value)
+    def process_result(self, value, type_):
+        if isinstance(type_, Molecule):
+            return PostgresRDKitPersistentMoleculeElement(value)
+        raise NotImplementedError("DB column for type %s not supported by the "
+                                  "current chemical dialect " % type(type_))
     
     def db_column_type(self, type_):
         if isinstance(type_, Molecule):
             return 'mol'
+        elif isinstance(type_, QMolecule):
+            return 'qmol'
         raise NotImplementedError("DB column for type %s not supported by the "
                                   "current chemical dialect " % type(type_))
 

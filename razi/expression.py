@@ -16,7 +16,7 @@ class ChemElement(object):
     def __getattr__(self, name):
         return getattr(functions, name)(self)
 
-class TxtChemElement(ChemElement, expression.Function):
+class TxtChemElement(expression.Function):
     """Represents a chemical value expressed within application code (e.g a 
     SMILES string).
     
@@ -38,7 +38,7 @@ def __compile_txtchemelement(element, compiler, **kw):
     return compiler.process(function)
 
     
-class MoleculeElement(object):
+class MoleculeElement(ChemElement):
     pass
 
 class TxtMoleculeElement(MoleculeElement, TxtChemElement):
@@ -56,7 +56,7 @@ class PersistentMoleculeElement(MoleculeElement):
         self.desc = desc
 
 
-class QMoleculeElement(object):
+class QMoleculeElement(ChemElement):
     pass
 
 
@@ -67,6 +67,13 @@ class TxtQMoleculeElement(QMoleculeElement, TxtChemElement):
     
     def __init__(self, desc):
         TxtChemElement.__init__(self, desc)
+
+
+class PersistentQMoleculeElement(QMoleculeElement):
+    """Represents a Molecule value loaded from the database."""
+    
+    def __init__(self, desc):
+        self.desc = desc
 
 
 def _to_mol(value):

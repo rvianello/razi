@@ -3,29 +3,28 @@ from sqlalchemy.types import UserDefinedType
 from sqlalchemy.ext.compiler import compiles
 
 from razi.dialect import DialectManager
-from razi.expression import MoleculeElement
+from razi.expression import ChemElement
 
-class Molecule(UserDefinedType):
-    """Molecule column type for chemical databases.
+class ChemType(UserDefinedType):
+    """Base column type for chemical data.
     
     Converts bind/result values to/from a generic Persistent value.
     This is used as a base class and overridden into dialect specific
     Persistent values.
     """
     
-    name = 'MOLECULE'
+    name = 'CHEMICAL'
     
-    def __init__(self, chemical_index=True, **kwargs):
-        self.chemical_index = chemical_index
-        super(Molecule, self).__init__(**kwargs)
-    
+    def __init__(self, **kwargs):
+        super(ChemType, self).__init__(**kwargs)
+        
     def bind_processor(self, dialect):
         def process(value):
             if value is None:
                 return value
-            elif not isinstance(value, MoleculeElement):
+            elif not isinstance(value, ChemElement):
                 return value
-            elif not isinstance(value.desc, MoleculeElement):
+            elif not isinstance(value.desc, ChemElement):
                 return value.desc
             else:
                 return value.desc.desc
@@ -39,9 +38,30 @@ class Molecule(UserDefinedType):
             else:
                 return value
         return process
-    
-    
-@compiles(Molecule)
-def _compile_molecule(type_, compiler, **kwargs):
+
+
+@compiles(ChemType)
+def _compile_chemtype(type_, compiler, **kwargs):
     chemical_dialect = DialectManager.get_chemical_dialect(compiler.dialect)
     return chemical_dialect.db_column_type(type_)
+
+
+class Molecule(ChemType):
+    """Molecule column type for chemical databases.
+    """
+    
+    name = 'MOLECULE'
+    
+    def __init__(self, chemical_index=True, **kwargs):
+        self.chemical_index = chemical_index
+        super(Molecule, self).__init__(**kwargs)
+    
+    
+class QMolecule(ChemType):
+    """QMolecule column type for chemical databases.
+    """
+    
+    name = 'QMOLECULE'
+    
+    
+    

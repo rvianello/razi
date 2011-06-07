@@ -84,7 +84,7 @@ class ChemicalDialect(object):
         """
         return None
     
-    def process_result(self, value, type):
+    def process_result(self, value, type_):
         """This method is called when a molecule value from the database is
         transformed into a MoleculeElement object. 
         
