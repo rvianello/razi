@@ -56,11 +56,11 @@ class PersistentMoleculeElement(MoleculeElement):
         self.desc = desc
 
 
-class PatternElement(object):
+class QMoleculeElement(object):
     pass
 
 
-class TxtPatternElement(PatternElement, TxtChemElement):
+class TxtQMoleculeElement(QMoleculeElement, TxtChemElement):
     """Represents a chemical fragment pattern expressed within application code
     (i.e. a SMARTS string)
     """

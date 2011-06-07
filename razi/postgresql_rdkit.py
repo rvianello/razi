@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 from sqlalchemy import Column
-from sqlalchemy.sql import column, literal, text, select, func, and_
+from sqlalchemy.sql import func
 from sqlalchemy.ext.compiler import compiles
 
 from razi.chem import ChemComparator
 from razi.chemtypes import Molecule
 from razi.expression import PersistentMoleculeElement, \
-    TxtMoleculeElement, TxtPatternElement
+    TxtMoleculeElement, TxtQMoleculeElement
 from razi.dialect import ChemicalDialect 
 from razi.functions import functions, parse_clause, BaseFunction
 
@@ -84,8 +84,8 @@ class pgrdkit_functions(functions):
                                       
     @staticmethod
     def _matches(compiler, element, arg1, arg2):
-        m1 = parse_clause(arg1, compiler, TxtPatternElement)
-        m2 = parse_clause(arg2, compiler, TxtPatternElement)
+        m1 = parse_clause(arg1, compiler, TxtQMoleculeElement)
+        m2 = parse_clause(arg2, compiler, TxtQMoleculeElement)
         if isinstance(m1, Column) and\
             isinstance(m1.type, Molecule) and \
             m1.type.chemical_index:
@@ -124,7 +124,7 @@ class PostgresRDKitDialect(ChemicalDialect):
     
     __functions = {
         TxtMoleculeElement: pgrdkit_functions.mol,
-        TxtPatternElement: pgrdkit_functions.qmol,
+        TxtQMoleculeElement: pgrdkit_functions.qmol,
         
         #functions.smiles: '',
         functions.mw: 'mol_amw',

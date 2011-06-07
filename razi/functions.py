@@ -16,7 +16,7 @@ def parse_clause(clause, compiler, translate_string=None):
     from razi.chemtypes import Molecule
     from razi.expression import MoleculeElement, TxtMoleculeElement
     from razi.expression import PersistentMoleculeElement
-    from razi.expression import PatternElement, TxtPatternElement
+    from razi.expression import QMoleculeElement, TxtQMoleculeElement
     
     if hasattr(clause, '__clause_element__'):
         # for example a column name
@@ -30,8 +30,8 @@ def parse_clause(clause, compiler, translate_string=None):
         elif isinstance(clause, PersistentMoleculeElement):
             return literal(clause.desc, Molecule)
         raise TypeError
-    elif isinstance(clause, PatternElement):
-        if isinstance(clause, TxtPatternElement):
+    elif isinstance(clause, QMoleculeElement):
+        if isinstance(clause, TxtQMoleculeElement):
             return clause
         raise TypeError
     elif isinstance(clause, basestring) and translate_string:
