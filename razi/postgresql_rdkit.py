@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from sqlalchemy import Column
-from sqlalchemy.sql import func
+from sqlalchemy.sql import func, cast
 from sqlalchemy.ext.compiler import compiles
 
 from razi.chem import ChemComparator
@@ -8,7 +8,7 @@ from razi.chemtypes import Molecule, QMolecule
 from razi.expression import PersistentMoleculeElement, \
     TxtMoleculeElement, TxtQMoleculeElement
 from razi.dialect import ChemicalDialect 
-from razi.functions import functions, parse_clause, BaseFunction
+from razi.functions import functions, parse_clause #, BaseFunction
 
 class PostgresRDKitComparator(ChemComparator):
     """Comparator class used for PostgreSQL+RDKit
@@ -97,28 +97,19 @@ class pgrdkit_functions(functions):
         else:
             return func.substruct(m1, m2)
                                       
-    class _Cast(BaseFunction):
-        def __init__(self, totype, *args, **kw):
-            self.totype = totype
-            BaseFunction.__init__(self, *args, **kw)
-            
     @staticmethod
     def mol(params, within_column_clause, **flags):
         # TODO: check carefully 'within_column_clause'
-        return pgrdkit_functions._Cast('mol', *params, **flags)
-
+        (param,) = params
+        return cast(param, Molecule)
+        
     @staticmethod
     def qmol(params, within_column_clause, **flags):
         # TODO: check carefully 'within_column_clause'
-        return pgrdkit_functions._Cast('qmol', *params, **flags)
+        (param,) = params
+        return cast(param, QMolecule)
 
 
-@compiles(pgrdkit_functions._Cast)
-def __compile_pgrdkit_cast(element, compiler, **kw):
-    chemical = parse_clause(element.arguments[0], compiler)
-    return "%s::%s" % (compiler.process(chemical), element.totype)
-         
-        
 class PostgresRDKitDialect(ChemicalDialect):
     """Implementation of ChemicalDialect for PostgreSQL+RDKit."""
     
