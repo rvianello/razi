@@ -2,16 +2,18 @@ from sqlalchemy import Column
 from sqlalchemy.orm import column_property
 from sqlalchemy.orm.interfaces import AttributeExtension
 from sqlalchemy.orm.properties import ColumnProperty
-from sqlalchemy.sql import expression
+#from sqlalchemy.sql import expression
 
 from razi.expression import _to_mol
-from razi.dialect import DialectManager
+#from razi.dialect import DialectManager
 from razi.functions import functions
 
 class ChemicalAttribute(AttributeExtension):
     """Intercepts 'set' events on a mapped instance attribute and 
     converts the incoming value to a molecule expression.
     
+    **** DEPRECATED ****
+    should be replaced by ORM Attribute event listeners
     """
     def set(self, state, value, oldvalue, initiator):
         return _to_mol(value)
@@ -32,7 +34,8 @@ class ChemComparator(ColumnProperty.ColumnComparator):
  
 class ChemExtensionColumn(Column):
     pass
-        
+
+
 def ChemColumn(*args, **kw):
     """Define a declarative chemistry-aware column property.
     
@@ -60,7 +63,8 @@ def ChemColumn(*args, **kw):
     
     return column_property(
         column, 
-        extension=ChemicalAttribute(), 
+        extension=ChemicalAttribute(), #    **** DEPRECATED ****
         comparator_factory=comparator
     )
+    
 
