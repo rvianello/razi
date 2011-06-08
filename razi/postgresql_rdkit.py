@@ -82,7 +82,7 @@ class pgrdkit_functions(functions):
             return func.rsubstruct(m1, m2)
                                       
     @staticmethod
-    def _matches(compiler, element, arg1, arg2):
+    def _match(compiler, element, arg1, arg2):
         m1 = parse_clause(arg1, compiler, TxtQMoleculeElement)
         m2 = parse_clause(arg2, compiler, TxtQMoleculeElement)
         if isinstance(m1, Column) and\
@@ -131,7 +131,7 @@ class PostgresRDKitDialect(ChemicalDialect):
         functions.equals: pgrdkit_functions._equals,
         functions.contains: pgrdkit_functions._contains,
         functions.contained_in: pgrdkit_functions._contained_in, 
-        functions.matches: pgrdkit_functions._matches,                    
+        functions.match: pgrdkit_functions._match,                    
         
         #pgrdkit_functions.func2 : 'Func2',
         }

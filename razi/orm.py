@@ -24,14 +24,21 @@ class ChemComparator(ColumnProperty.ColumnComparator):
         and overrides their behavior.
     """
     
-    def __getattr__(self, name):
-        return getattr(functions, name)(self)
-        
-    # override the __eq__() operator (allows to use '==' on molecules)
+    # explicitly override the "standard" ops
     def __eq__(self, other): 
         return functions.equals(self, other)
 
- 
+    def contains(self, other, *args, **kwargs):
+        return functions.contains(self, other, *args, **kwargs)
+
+    def match(self, other):
+        return functions.match(self, other)
+        
+    # forward everything else
+    def __getattr__(self, name):
+        return getattr(functions, name)(self)
+
+
 class ChemExtensionColumn(Column):
     pass
 

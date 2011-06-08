@@ -241,7 +241,7 @@ class functions:
         pass
     
     
-    class matches(DialectSpecificFunction):
+    class match(DialectSpecificFunction):
         pass
     
     

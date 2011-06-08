@@ -114,7 +114,7 @@ class chemicalite_functions(functions):
             return q1
     
     @staticmethod
-    def _matches(compiler, element, arg1, arg2):
+    def _match(compiler, element, arg1, arg2):
         m1 = parse_clause(arg1, compiler, TxtQMoleculeElement)
         m2 = parse_clause(arg2, compiler, TxtQMoleculeElement)
         q1 = func.mol_is_substruct(m1, m2)
@@ -156,7 +156,7 @@ class ChemicaLiteDialect(ChemicalDialect):
         functions.equals: chemicalite_functions._equals,
         functions.contains: chemicalite_functions._contains,
         functions.contained_in: chemicalite_functions._contained_in, 
-        functions.matches: chemicalite_functions._matches, 
+        functions.match: chemicalite_functions._match, 
             
         #chemicalite_functions.func2 : 'Func2',
         }
