@@ -9,9 +9,9 @@ Welcome to razi's documentation!
 Contents:
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
-   sql_exp_lang_tutorial
+   database_creation_tutorial
    database_setup
 
 Indices and tables
