@@ -48,6 +48,8 @@ def _compile_chemtype(type_, compiler, **kwargs):
 
 class Molecule(ChemType):
     """Molecule column type for chemical databases.
+    
+    Represents a molecular structure.
     """
     
     name = 'MOLECULE'
@@ -59,9 +61,21 @@ class Molecule(ChemType):
     
 class QMolecule(ChemType):
     """QMolecule column type for chemical databases.
+
+    Represents a query molecule (a structural pattern, e.g. a SMARTS equivalent). 
     """
     
     name = 'QMOLECULE'
     
     
+class BitFingerprint(ChemType):
+    """Bitstring fingerprint column type for chemical databases.
+    """
     
+    name = 'BFP'
+    
+    def __init__(self, chemical_index=True, **kwargs):
+        self.chemical_index = chemical_index
+        super(BitFingerprint, self).__init__(**kwargs)
+    
+

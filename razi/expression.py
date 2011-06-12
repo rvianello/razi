@@ -76,6 +76,17 @@ class PersistentQMoleculeElement(QMoleculeElement):
         self.desc = desc
 
 
+class BitFingerprintElement(ChemElement):
+    pass
+
+
+class PersistentBitFingerprintElement(BitFingerprintElement):
+    """Represents a BitFingerprint value loaded from the database."""
+    
+    def __init__(self, desc):
+        self.desc = desc
+
+
 def _to_mol(value):
     """Interpret a value as a Molecule-compatible construct."""
 
@@ -85,6 +96,18 @@ def _to_mol(value):
         return value
     elif isinstance(value, basestring):
         return TxtMoleculeElement(value)
+    elif value is None:
+        return None
+    else:
+        raise TypeError
+
+def _to_bfp(value):
+    """Interpret a value as a BitFingerprint-compatible construct."""
+
+    if hasattr(value, '__clause_element__'):
+        return value.__clause_element__()
+    elif isinstance(value, (expression.ClauseElement, BitFingerprintElement)):
+        return value
     elif value is None:
         return None
     else:

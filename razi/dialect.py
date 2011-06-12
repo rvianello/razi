@@ -100,8 +100,10 @@ class ChemicalDialect(object):
         """This method is called after the mapped table was created in the 
         database by SQLAlchemy.
         """
-        from razi.chemtypes import Molecule
-        chemical_cols = [c for c in table.c if isinstance(c.type, Molecule)]
+        from razi.chemtypes import Molecule, BitFingerprint
+        chemical_cols = [c for c in table.c if 
+            (isinstance(c.type, Molecule) or isinstance(c.type, BitFingerprint))
+            ]
         for c in chemical_cols:
             self._ddl_after_create(table, c, connection.engine)
             
@@ -117,8 +119,10 @@ class ChemicalDialect(object):
         """This method is called before the mapped table is dropped from the
         database by SQLAlchemy.
         """
-        from razi.chemtypes import Molecule
-        chemical_cols = [c for c in table.c if isinstance(c.type, Molecule)]
+        from razi.chemtypes import Molecule, BitFingerprint
+        chemical_cols = [c for c in table.c if 
+            (isinstance(c.type, Molecule) or isinstance(c.type, BitFingerprint))
+            ]
         for c in chemical_cols:
             self._ddl_before_drop(table, c, connection.engine)
 

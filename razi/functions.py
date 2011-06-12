@@ -245,4 +245,45 @@ class functions:
         pass
     
     
+    class morgan_b(BaseFunction):
+        pass
+    
+    
+    class morgan_feat_b(BaseFunction):
+        pass
+    
+        
+    class atompair_b(BaseFunction):
+        pass
+    
+    
+    class torsion_b(BaseFunction):
+        pass
+    
+    
+    class layered_b(BaseFunction):
+        pass
+    
+    
+    class tanimoto_similarity(BaseFunction):
+        pass
+    
+    
+    class tanimoto_similar(DialectSpecificFunction):
+        pass
+    
+    
+    class dice_similarity(BaseFunction):
+        pass
+    
+    
+    class dice_similar(DialectSpecificFunction):
+        pass
+    
+    
 
+   
+    
+    
+    
+    

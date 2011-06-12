@@ -3,8 +3,9 @@ from sqlalchemy import Column
 from sqlalchemy.sql import func, cast
 
 from razi.chem import ChemComparator
-from razi.chemtypes import Molecule, QMolecule
-from razi.expression import PersistentMoleculeElement, \
+from razi.chemtypes import Molecule, QMolecule, BitFingerprint
+from razi.expression import \
+    PersistentMoleculeElement, PersistentBitFingerprintElement, \
     TxtMoleculeElement, TxtQMoleculeElement
 from razi.dialect import ChemicalDialect 
 from razi.functions import functions, parse_clause #, BaseFunction
@@ -20,7 +21,6 @@ class PostgresRDKitComparator(ChemComparator):
 
 
 class PostgresRDKitPersistentMoleculeElement(PersistentMoleculeElement):
-    """Represents a Molecule value as loaded from the database."""
 
     def __init__(self, desc):
         self.desc = desc
@@ -28,6 +28,18 @@ class PostgresRDKitPersistentMoleculeElement(PersistentMoleculeElement):
     def __getattr__(self, name):
         try:
             return PersistentMoleculeElement.__getattr__(self, name)
+        except AttributeError:
+            return getattr(pgrdkit_functions, name)(self)
+
+
+class PostgresRDKitPersistentBitFingerprintElement(PersistentBitFingerprintElement):
+
+    def __init__(self, desc):
+        self.desc = desc
+        
+    def __getattr__(self, name):
+        try:
+            return PersistentBitFingerprintElement.__getattr__(self, name)
         except AttributeError:
             return getattr(pgrdkit_functions, name)(self)
 
@@ -97,6 +109,34 @@ class pgrdkit_functions(functions):
             return func.substruct(m1, m2)
                                       
     @staticmethod
+    def _tanimoto(compiler, element, arg1, arg2):
+        m1 = parse_clause(arg1, compiler)
+        m2 = parse_clause(arg2, compiler)
+        if (isinstance(m1, Column) and \
+            isinstance(m1.type, BitFingerprint) and \
+            m1.type.chemical_index) or \
+           (isinstance(m2, Column) and \
+            isinstance(m2.type, BitFingerprint) and \
+            m2.type.chemical_index):
+            return m1.op('%')(m2)
+        else:
+            return func.tanimoto_sml_op(m1, m2)
+                                      
+    @staticmethod
+    def _dice(compiler, element, arg1, arg2):
+        m1 = parse_clause(arg1, compiler)
+        m2 = parse_clause(arg2, compiler)
+        if (isinstance(m1, Column) and \
+            isinstance(m1.type, BitFingerprint) and \
+            m1.type.chemical_index) or \
+           (isinstance(m2, Column) and \
+            isinstance(m2.type, BitFingerprint) and \
+            m2.type.chemical_index):
+            return m1.op('#')(m2)
+        else:
+            return func.dice_sml_op(m1, m2)
+                                      
+    @staticmethod
     def mol(params, within_column_clause, **flags):
         # TODO: check carefully 'within_column_clause'
         (param,) = params
@@ -116,7 +156,7 @@ class PostgresRDKitDialect(ChemicalDialect):
         TxtMoleculeElement: pgrdkit_functions.mol,
         TxtQMoleculeElement: pgrdkit_functions.qmol,
         
-        #functions.smiles: '',
+        # molecular descriptors
         functions.mw: 'mol_amw',
         functions.logp: 'mol_logp',
         functions.tpsa: 'mol_tpsa',
@@ -128,10 +168,24 @@ class PostgresRDKitDialect(ChemicalDialect):
         functions.num_rings: 'mol_numrings',
         functions.num_rotatable_bonds: 'mol_numrotatablebonds',
         
+        # molecule comparison ops
         functions.equals: pgrdkit_functions._equals,
         functions.contains: pgrdkit_functions._contains,
         functions.contained_in: pgrdkit_functions._contained_in, 
         functions.match: pgrdkit_functions._match,                    
+        
+        # bitstring fingerprint generation
+        functions.morgan_b: 'morganbv_fp',
+        functions.morgan_feat_b: 'featmorganbv_fp',
+        functions.atompair_b: 'atompairbv_fp',
+        functions.torsion_b: 'torsionbv_fp',
+        functions.layered_b: 'layered_fp',
+                
+        # fingerprint similarity
+        functions.tanimoto_similarity : 'tanimoto_sml',
+        functions.tanimoto_similar: pgrdkit_functions._tanimoto,
+        functions.dice_similarity: 'dice_sml',
+        functions.dice_similar: pgrdkit_functions._dice,
         
         #pgrdkit_functions.func2 : 'Func2',
         }
@@ -142,6 +196,8 @@ class PostgresRDKitDialect(ChemicalDialect):
     def process_result(self, value, type_):
         if isinstance(type_, Molecule):
             return PostgresRDKitPersistentMoleculeElement(value)
+        elif isinstance(type_, BitFingerprint):
+            return PostgresRDKitPersistentBitFingerprintElement(value)
         raise NotImplementedError("DB column for type %s not supported by the "
                                   "current chemical dialect " % type(type_))
     
@@ -150,6 +206,8 @@ class PostgresRDKitDialect(ChemicalDialect):
             return 'mol'
         elif isinstance(type_, QMolecule):
             return 'qmol'
+        elif isinstance(type_, BitFingerprint):
+            return 'bfp'
         raise NotImplementedError("DB column for type %s not supported by the "
                                   "current chemical dialect " % type(type_))
 
