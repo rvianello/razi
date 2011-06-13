@@ -118,7 +118,9 @@ class pgrdkit_functions(functions):
            (isinstance(m2, Column) and \
             isinstance(m2.type, BitFingerprint) and \
             m2.type.chemical_index):
-            return m1.op('%')(m2)
+            # apparently, we can just use the mod operator to generate the 
+            # desired SQL expression
+            return m1 % m2
         else:
             return func.tanimoto_sml_op(m1, m2)
                                       
