@@ -4,11 +4,12 @@ from sqlalchemy.orm.interfaces import AttributeExtension
 from sqlalchemy.orm.properties import ColumnProperty
 #from sqlalchemy.sql import expression
 
-from razi.expression import _to_mol
+from razi.expression import _to_mol, _to_bfp
+from razi.chemtypes import Molecule, BitFingerprint
 #from razi.dialect import DialectManager
 from razi.functions import functions
 
-class ChemicalAttribute(AttributeExtension):
+class MoleculeAttribute(AttributeExtension):
     """Intercepts 'set' events on a mapped instance attribute and 
     converts the incoming value to a molecule expression.
     
@@ -17,6 +18,17 @@ class ChemicalAttribute(AttributeExtension):
     """
     def set(self, state, value, oldvalue, initiator):
         return _to_mol(value)
+ 
+
+class BitFingerprintAttribute(AttributeExtension):
+    """Intercepts 'set' events on a mapped instance attribute and 
+    converts the incoming value to a binary fingerprint expression.
+    
+    **** DEPRECATED ****
+    should be replaced by ORM Attribute event listeners
+    """
+    def set(self, state, value, oldvalue, initiator):
+        return _to_bfp(value)
  
 
 class ChemComparator(ColumnProperty.ColumnComparator):
@@ -68,9 +80,16 @@ def ChemColumn(*args, **kw):
         # if used for declarative, create a new column
         column = ChemExtensionColumn(*args, **kw) 
     
+    if isinstance(column.type, Molecule):
+        extension = MoleculeAttribute()
+    elif isinstance(column.type, BitFingerprint):
+        extension = BitFingerprintAttribute()
+    else:
+        raise TypeError
+        
     return column_property(
         column, 
-        extension=ChemicalAttribute(), #    **** DEPRECATED ****
+        extension=extension,
         comparator_factory=comparator
     )
     
