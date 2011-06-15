@@ -43,7 +43,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'razi'
+project = u'Razi'
 copyright = u'2011, Riccardo Vianello'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -215,6 +215,6 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'razi', u'razi Documentation',
+    ('index', 'Razi', u'Razi Documentation',
      [u'Riccardo Vianello'], 1)
 ]
