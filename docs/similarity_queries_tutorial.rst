@@ -76,7 +76,7 @@ In the present case this last command creates the ``compounds`` table and also i
 Inserting data
 --------------
 
-To populate the database the same data and code we used in the first tutorial is used again (this time we import a more extended dataset, but still small enough to keep the processing time acceptably short for a tutorial. Feel free to modify the number of compounds imported, just be aware that some results may change with the imported dataset):
+To populate the database the same data and code we used in the first tutorial is used again (this time we import a more extended dataset, but still small enough to keep the processing time acceptably short for a tutorial. Feel free to modify the number of compounds imported, just be aware that some results may change with the imported dataset)::
 
     session = Session()
     for count, chembl_id, smiles in read_chembldb('chembl_08_chemreps.txt', 50000):

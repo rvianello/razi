@@ -13,6 +13,7 @@ Contents:
 
    database_creation_tutorial
    similarity_queries_tutorial
+   structure_queries_tutorial
    database_setup
 
 Indices and tables
