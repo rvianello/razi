@@ -12,6 +12,7 @@ Contents:
    :maxdepth: 1
 
    database_creation_tutorial
+   similarity_queries_tutorial
    database_setup
 
 Indices and tables

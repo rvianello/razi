@@ -19,9 +19,11 @@ Database creation
 
 Then, a new chemical database is created::
  
-    $ createdb -Udb_user -Ttemplate_rdkit chembldb_tutorial
+    $ createdb -Udb_user -Ttemplate_rdkit razi_tutorial
 
 This initialization step includes the installation of the RDKit PostgreSQL extension (for details about PostgreSQL+RDKit setup see the dedicated section in this document).
+
+*The database user name and password, together with the name of the database itself, are most likely to change in your case. Just replace them consistently with the values appropriate to your work environment.* 
 
 Connection to the database
 --------------------------
@@ -29,7 +31,7 @@ Connection to the database
 Start your python interpreter and configure a database connection::
 
     from sqlalchemy import create_engine
-    engine = create_engine('postgresql://db_user:db_password@host:1234/chembldb_tutorial')
+    engine = create_engine('postgresql://db_user:db_password@host:1234/razi_tutorial')
 
 also, define the database session factory object::
 
