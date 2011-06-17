@@ -3,7 +3,7 @@ Creating a chemical database
 
 This tutorial is based on a similar document available from the `RDKit wiki <http://code.google.com/p/rdkit/wiki/DatabaseCreation>`_ and it illustrates how to build a chemical database and perform structural searches using Razi. The Python bindings for the RDKit libraries will be used in some data pre-processing steps, so you'll need to have them available on your system.
 
-Some basic understanding of SQLAlchemy is assumed. Please refer to the excellent `SQLALchemy ORM tutorial <http://www.sqlalchemy.org/docs/orm/tutorial.html>`_ in case of need.
+Some basic understanding of SQLAlchemy is assumed. For additional details, please refer to the excellent `SQLALchemy ORM tutorial <http://www.sqlalchemy.org/docs/orm/tutorial.html>`_.
 
 Download sample data
 --------------------
