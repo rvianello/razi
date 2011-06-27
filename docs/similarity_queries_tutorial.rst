@@ -1,5 +1,5 @@
-Example similarity queries
-==========================
+Tutorial: Example similarity queries
+====================================
 
 This tutorial is again based on a similar document available from the `RDKit wiki <http://code.google.com/p/rdkit/wiki/ExampleSimilarityQueries>`_ and it illustrates how to use Razi to perform structure similarity queries on a chemical database.
 

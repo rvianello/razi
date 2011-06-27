@@ -1,5 +1,5 @@
-Example structure queries
-=========================
+Tutorial: Example structure queries
+===================================
 
 This tutorial is based on a similar document available from the `RDKit wiki <http://code.google.com/p/rdkit/wiki/ExampleStructureQueries>`_ and it illustrates how to use Razi to perform substructure and superstructure queries on a chemical database.
 
