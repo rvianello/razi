@@ -3,14 +3,15 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Razi
-====
+Razi: Using SQLAlchemy with chemical databases
+==============================================
 
 Contents:
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
 
+   introduction
    database_creation_tutorial
    similarity_queries_tutorial
    structure_queries_tutorial
