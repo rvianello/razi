@@ -71,7 +71,7 @@ and the database schema is created::
 
     Base.metadata.create_all()
 
-In the present case this last command creates the ``compounds`` table and also implicitly includes the creation of indices on the columns with types ``Molecule`` and  ``BitFingerprint``.
+In the present case this last command creates the ``compounds`` table and also implicitly includes the creation of indices on the columns with types ``Molecule`` and  ``BitFingerprint``. Please notice how in the constructor the fingerprint fields are initialized by database backend expressions invoked on the ``structure`` column.
 
 Inserting data
 --------------
@@ -82,8 +82,7 @@ To populate the database the same data and code we used in the first tutorial is
     for count, chembl_id, smiles in read_chembldb('chembl_08_chemreps.txt', 50000):
         compound = Compound(chembl_id, smiles)
 	session.add(compound)
-	if not count % 1000:
-	    session.commit()
+    session.commit()
 
 Querying the database
 ---------------------
@@ -132,7 +131,7 @@ Including the similarity values in the search results::
 Similarity search using other fingerprints
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-At this point using the other fingerprints basically only requires redefining the ``query_bfp`` fingerprint and the query constraint. For example, Tanimoto similarity between topological torsion fingerprints using the current similarity cutoff::
+At this point using the other fingerprint types basically only requires redefining the ``query_bfp`` fingerprint and the query constraint. For example, Tanimoto similarity between topological torsion fingerprints using the current similarity cutoff::
 
     >>> query_bfp = functions.torsion_b(TxtMoleculeElement(query_cmpnd))
     >>> constraint = Compound.torsion.tanimoto_similar(query_bfp)

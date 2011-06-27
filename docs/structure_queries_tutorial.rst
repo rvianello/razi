@@ -1,7 +1,7 @@
 Example structure queries
 =========================
 
-This tutorial is again based on a similar document available from the `RDKit wiki <http://code.google.com/p/rdkit/wiki/ExampleStructureQueries>`_ and it illustrates how to use Razi to perform substructure and superstructure queries on a chemical database.
+This tutorial is based on a similar document available from the `RDKit wiki <http://code.google.com/p/rdkit/wiki/ExampleStructureQueries>`_ and it illustrates how to use Razi to perform substructure and superstructure queries on a chemical database.
 
 No dedicated database is created for this tutorial. The same database used in the "Example similarity queries" tutorial can be used instead. If you are no longer connected to the database, the connection configuration and schema definition must be entered again. If you are still connected just skip to "`Querying the database`_".
 
