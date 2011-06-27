@@ -1,9 +1,11 @@
-Creating a chemical database
-============================
+Tutorial: Creating a chemical database
+======================================
 
-This tutorial is based on a similar document available from the `RDKit wiki <http://code.google.com/p/rdkit/wiki/DatabaseCreation>`_ and it illustrates how to build a chemical database and perform structural searches using Razi. The Python bindings for the RDKit libraries will be used in some data pre-processing steps, so you'll need to have them available on your system.
+This tutorial is based on a similar document available from the `RDKit wiki <http://code.google.com/p/rdkit/wiki/DatabaseCreation>`_ and it illustrates how to build a chemical database and perform some simple searches using Razi. The Python bindings for the RDKit libraries will be used in some data pre-processing steps, so you'll need to have them available on your system.
 
 Some basic understanding of SQLAlchemy is assumed. For additional details, please refer to the excellent `SQLALchemy ORM tutorial <http://www.sqlalchemy.org/docs/orm/tutorial.html>`_.
+
+The tutorial also assumes all commands to be entered interactively into a python shell. Since these commands also include some class and function definitions, a similar assumption is actually practical only in case a somewhat evoluted shell is used (e.g. ipython or dreampie). Users may eventually consider reading the whole tutorial first (it's not long) and copying the commands into a single python script, and import this script into an interactive session.
 
 Download sample data
 --------------------
@@ -71,7 +73,9 @@ to actually create the database schema, a method of the ``Base`` class ``metadat
 
     Base.metadata.create_all()
 
-In the present case this last command creates the ``compounds`` table and also implicitly includes the creation of a structural index on the column with type ``Molecule``.
+In the present case this last command creates a table named ``compounds`` with columns ``id``, ``name`` and ``structure`` and also implicitly includes the creation of a structural index on the column with type ``Molecule``. 
+
+Please notice that differently from ``id`` and ``name``, which are defined as plain SQLAlchemy ``Column`` attributes, ``structure`` is defined by a ``ChemColumn``.
 
 Inserting data
 --------------
@@ -88,7 +92,7 @@ To semplify the processing of these data records we define a namedtuple matching
     from collections import namedtuple
     Record = namedtuple('Record', 'chembl_id, chebi_id, mw, smiles, inchi, inchi_key')
 
-During this tutorial only a subset of this data is actually imported into the database, and at the same time we want to make sure that troublesome SMILES strings are skipped (SMILES containing errors, compounds that are too big and/or other strings that the RDKit cartridge won't be able to process). File parsing and data filtering can be performed with a function similar to the following::
+During this tutorial only a portion of the whole database is actually imported, and at the same time we want to make sure that troublesome SMILES strings are skipped (SMILES containing errors, compounds that are too big and/or other strings that the RDKit cartridge won't be able to process). File parsing and data filtering can therefore be performed with a function similar to the following::
 
     import csv 
     from rdkit import Chem
@@ -122,8 +126,7 @@ With this function importing the compounds into the database reduces to a simple
     for count, chembl_id, smiles in read_chembldb('chembl_08_chemreps.txt', 25000):
         compound = Compound(chembl_id, smiles)
 	session.add(compound)
-	if not count % 1000:
-	    session.commit()
+    session.commit()
 
 Querying the database
 ---------------------
@@ -160,10 +163,10 @@ Finally (and hopefully more interestingly), here's a first example of a more che
     (CHEMBL26025) < Cc1cccc(NC(=O)Nc2ccc3nnccc3c2)c1 >
     >>> 
 
-Please notice how the SQLAlchemy's ORM API allows the incremental specification of the filtering clause (or clauses) associated to the main selection query and how the ``subset`` instance is actually used twice (to compute the number of record matching the query and to retrieve the actual records). In addition to this, the returned records can also be used as the basis for further queries, also using the chemical functions provided by the database backend:
+Please notice how the SQLAlchemy's ORM API allows the incremental specification of the filtering clause (or clauses) associated to the main selection query and how the ``subset`` instance is actually used twice, in two distinct queries (to compute the number of record matching the clause and to retrieve the actual records). In addition to this, the returned records can also serve as the basis for further queries, also using the chemical functions provided by the database backend:
 
     >>> for compound in subset: 
-    ...     # a query returning the computed molecular weight for each compound
+    ...     # run a query to compute the molecular weight for this compound
     ...     print session.scalar(compound.structure.mw)
     ... 
     488.701
