@@ -1,7 +1,8 @@
+from razi.expression import TxtMoleculeElement
 from razi.functions import functions
 
 #from nose.tools import eq_, ok_, raises, assert_almost_equal
-from nose.tools import eq_, assert_almost_equal
+from nose.tools import eq_, ok_, assert_almost_equal
 
 # test with low precision, we are not testing the correctness of the
 # computed descriptors, but the sanity of the functions mapping
@@ -102,3 +103,29 @@ class TestFunctions(object):
         for smiles, nr in data:
             eq_(self.engine.scalar(functions.num_rotatable_bonds(smiles)), nr)
 
+    def test_equals(self):
+        ok_(self.engine.scalar(functions.equals('c1ccccc1', 'C1=CC=CC=C1')))
+        ok_(self.engine.scalar(functions.equals('c1c(O)cccc1', 'OC1=CC=CC=C1')))
+        ok_(not self.engine.scalar(functions.equals('CCC', 'COC')))
+        
+
+    def test_contains(self):
+        ok_(self.engine.scalar(functions.contains('c1ccccc1C', 'C1=CC=CC=C1')))
+        ok_(self.engine.scalar(functions.contains('c1c(O)cccc1', 'C1=CC=CC=C1')))
+        ok_(not self.engine.scalar(functions.contains('CCC', 'COC')))
+        
+    def test_contained_in(self):
+        ok_(self.engine.scalar(functions.contained_in('c1ccccc1', 
+                                                      'C1=CC=C(C)C=C1')))
+        ok_(self.engine.scalar(functions.contained_in('c1c(O)cccc1', 
+                                                      'C1=CC=CC=C1OC')))
+        ok_(not self.engine.scalar(functions.contained_in('CCC', 'COC')))
+        
+    def test_match(self):
+        ok_(self.engine.scalar(functions.match(TxtMoleculeElement('c1ccccc1'), 
+                                               'c1acccc1')))
+        ok_(not self.engine.scalar(functions.match(TxtMoleculeElement('c1ncncc1'), 
+                                                   'c1acccc1')))
+        # shouldn't the following also work?
+        # ok_(self.engine.scalar(TxtMoleculeElement('c1ccccc1').match('c1acccc1')))
+        
