@@ -83,3 +83,22 @@ class TestFunctions(object):
         for smiles, nh in data:
             eq_(self.engine.scalar(functions.num_hvy_atoms(smiles)), nh)
 
+    def test_num_rings(self):
+        data = (
+            ('c1ccccc1', 1),
+            ('c1ccccc1OC1CCCC1', 2),
+            ('CCCCCCCCC', 0),
+            )
+        for smiles, nr in data:
+            eq_(self.engine.scalar(functions.num_rings(smiles)), nr)
+
+    def test_num_rotatable_bonds(self):
+        data = (
+            ('c1ccccc1', 0),
+            ('c1ccccc1OC1CCCC1', 2),
+            ('CCCCCCCCC', 6),
+            ('CC=CC', 0),
+            )
+        for smiles, nr in data:
+            eq_(self.engine.scalar(functions.num_rotatable_bonds(smiles)), nr)
+
