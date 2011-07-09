@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from sqlalchemy import Column
-from sqlalchemy.sql import func, cast
+from sqlalchemy.sql import func, cast, text
+from sqlalchemy.ext.compiler import compiles
+from sqlalchemy.sql.expression import ClauseElement, Executable
 
 from razi.chem import ChemComparator
 from razi.chemtypes import Molecule, QMolecule, BitFingerprint
@@ -9,6 +11,26 @@ from razi.expression import \
     TxtMoleculeElement, TxtQMoleculeElement
 from razi.dialect import ChemicalDialect 
 from razi.functions import functions, parse_clause #, BaseFunction
+
+class GUC(Executable, ClauseElement):
+    
+    def __init__(self, variable, *args, **kwargs):
+        self.variable = variable
+        #Executable.__init__(self, self.__class__.__name__, **kwargs)
+        
+    def set(self, value):
+        xpr = text('SET %s=:value' % self.variable)
+        return xpr.execution_options(autocommit=True).params(value=value)
+        
+    def get(self):
+        return text('SHOW %s' % self.variable)
+
+@compiles(GUC)
+def __compile_guc(element, compiler, **kwargs):
+    return compiler.process(element.get())
+    
+tanimoto_threshold = GUC('rdkit.tanimoto_threshold')
+dice_threshold = GUC('rdkit.dice_threshold')
 
 class PostgresRDKitComparator(ChemComparator):
     """Comparator class used for PostgreSQL+RDKit
