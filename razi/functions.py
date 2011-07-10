@@ -265,6 +265,22 @@ class functions:
         pass
     
     
+    class morgan_c(BaseFunction):
+        pass
+    
+    
+    class morgan_feat_c(BaseFunction):
+        pass
+    
+        
+    class atompair_c(BaseFunction):
+        pass
+    
+    
+    class torsion_c(BaseFunction):
+        pass
+    
+    
     class tanimoto_similarity(BaseFunction):
         pass
     

@@ -87,6 +87,17 @@ class PersistentBitFingerprintElement(BitFingerprintElement):
         self.desc = desc
 
 
+class CntFingerprintElement(ChemElement):
+    pass
+
+
+class PersistentCntFingerprintElement(CntFingerprintElement):
+    """Represents a CntFingerprint value loaded from the database."""
+    
+    def __init__(self, desc):
+        self.desc = desc
+
+
 def _to_mol(value):
     """Interpret a value as a Molecule-compatible construct."""
 
@@ -107,6 +118,19 @@ def _to_bfp(value):
     if hasattr(value, '__clause_element__'):
         return value.__clause_element__()
     elif isinstance(value, (expression.ClauseElement, BitFingerprintElement)):
+        return value
+    elif value is None:
+        return None
+    else:
+        raise TypeError
+
+
+def _to_cfp(value):
+    """Interpret a value as a IntFingerprint-compatible construct."""
+
+    if hasattr(value, '__clause_element__'):
+        return value.__clause_element__()
+    elif isinstance(value, (expression.ClauseElement, CntFingerprintElement)):
         return value
     elif value is None:
         return None

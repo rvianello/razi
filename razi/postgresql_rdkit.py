@@ -5,9 +5,10 @@ from sqlalchemy.ext.compiler import compiles
 from sqlalchemy.sql.expression import ClauseElement, Executable
 
 from razi.chem import ChemComparator
-from razi.chemtypes import Molecule, QMolecule, BitFingerprint
+from razi.chemtypes import Molecule, QMolecule, BitFingerprint, CntFingerprint
 from razi.expression import \
     PersistentMoleculeElement, PersistentBitFingerprintElement, \
+    PersistentCntFingerprintElement, \
     TxtMoleculeElement, TxtQMoleculeElement
 from razi.dialect import ChemicalDialect 
 from razi.functions import functions, parse_clause #, BaseFunction
@@ -62,6 +63,18 @@ class PostgresRDKitPersistentBitFingerprintElement(PersistentBitFingerprintEleme
     def __getattr__(self, name):
         try:
             return PersistentBitFingerprintElement.__getattr__(self, name)
+        except AttributeError:
+            return getattr(pgrdkit_functions, name)(self)
+
+
+class PostgresRDKitPersistentCntFingerprintElement(PersistentCntFingerprintElement):
+
+    def __init__(self, desc):
+        self.desc = desc
+        
+    def __getattr__(self, name):
+        try:
+            return PersistentCntFingerprintElement.__getattr__(self, name)
         except AttributeError:
             return getattr(pgrdkit_functions, name)(self)
 
@@ -205,6 +218,12 @@ class PostgresRDKitDialect(ChemicalDialect):
         functions.torsion_b: 'torsionbv_fp',
         functions.layered_b: 'layered_fp',
                 
+        # count vector fingerprint generation
+        functions.morgan_c: 'morgan_fp',
+        functions.morgan_feat_c: 'featmorgan_fp',
+        functions.atompair_c: 'atompair_fp',
+        functions.torsion_c: 'torsion_fp',
+                
         # fingerprint similarity
         functions.tanimoto_similarity : 'tanimoto_sml',
         functions.tanimoto_similar: pgrdkit_functions._tanimoto,
@@ -222,6 +241,8 @@ class PostgresRDKitDialect(ChemicalDialect):
             return PostgresRDKitPersistentMoleculeElement(value)
         elif isinstance(type_, BitFingerprint):
             return PostgresRDKitPersistentBitFingerprintElement(value)
+        elif isinstance(type_, CntFingerprint):
+            return PostgresRDKitPersistentCntFingerprintElement(value)
         raise NotImplementedError("DB column for type %s not supported by the "
                                   "current chemical dialect " % type(type_))
     
@@ -232,6 +253,8 @@ class PostgresRDKitDialect(ChemicalDialect):
             return 'qmol'
         elif isinstance(type_, BitFingerprint):
             return 'bfp'
+        elif isinstance(type_, CntFingerprint):
+            return 'sfp'
         raise NotImplementedError("DB column for type %s not supported by the "
                                   "current chemical dialect " % type(type_))
 

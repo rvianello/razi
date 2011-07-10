@@ -79,3 +79,14 @@ class BitFingerprint(ChemType):
         super(BitFingerprint, self).__init__(**kwargs)
     
 
+class CntFingerprint(ChemType):
+    """Count vector fingerprint column type for chemical databases.
+    """
+    
+    name = 'CFP'
+    
+    def __init__(self, chemical_index=True, **kwargs):
+        self.chemical_index = chemical_index
+        super(CntFingerprint, self).__init__(**kwargs)
+    
+
