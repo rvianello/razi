@@ -58,11 +58,6 @@ then, the definition of the mapped entity follows::
             self.torsion = self.structure.torsion_b()
             self.morgan = self.structure.morgan_b(2)
         
-        
-        def __init__(self, name, structure):
-            self.name = name
-            self.structure = structure
-            
         def __repr__(self):
             return '(%s) < %s >' % (self.name, self.structure)
 
@@ -146,4 +141,21 @@ and Tanimoto similarity between atom-pair fingerprints using the current similar
     >>> results = session.query(Compound, tanimoto_sml).filter(constraint).order_by(desc(tanimoto_sml))
 
 
+Changing the similarity cutoff values
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The threshold values used by the Tanimoto and Dice filter operators are mapped to two expressions defined in module `razi.postgresql_rdkit`::
+
+    >>> from razi.postgresql_rdkit import tanimoto_threshold, dice_threshold
+    >>> session.scalar(tanimoto_threshold), session.scalar(dice_threshold)
+    (u'0.5', u'0.5')
+    >>> 
+ 
+The same expressions provide a mechanism to set a different cutoff::
+
+    >>> session.execute(tanimoto_threshold.set(0.65))
+    <sqlalchemy.engine.base.ResultProxy object at 0x1bbc5a10>
+    >>> session.scalar(tanimoto_threshold), session.scalar(dice_threshold)
+    (u'0.65', u'0.5')
+    >>> 
 
