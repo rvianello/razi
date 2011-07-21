@@ -1,3 +1,5 @@
+.. _similarity-queries-tutorial:
+
 Example similarity queries
 ==========================
 
