@@ -67,14 +67,12 @@ Retrieve the number of molecules containing a triazine:
     >>> constraint = Compound.structure.contains('c1ncncn1')
     >>> print session.query(Compound).filter(constraint).count()
     56
-    >>>
     
 Retrieve the number of molecules containing a coumarin::
 
     >>> constraint = Compound.structure.contains('O=C1OC2=CC=CC=C2C=C1')
     >>> print session.query(Compound).filter(constraint).count()
     166
-    >>>
 
 Get the first 10 of those::
 
@@ -89,7 +87,7 @@ Get the first 10 of those::
     (CHEMBL57173) < C/C(CC/C=C(\C)C1=CC(=O)C(C)(C)O1)=C\COc1cc2oc(=O)ccc2cc1 >
     (CHEMBL57138) < COc1ccc(-c2c3n(c4c(=O)oc5cc(O)c(OC)cc5c42)CCc2c(OC)c(OC)c(OC)cc2-3)cc1O >
     (CHEMBL56918) < C/C(=C\COc1ccc2c(oc(=O)cc2)c1)C1=CC(=O)C(C)(C)O1 >
-    >>>
+
 
 Including property filters
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -114,7 +112,7 @@ Differently from the original RDKit tutorial, chemical descriptor were not intro
     CHEMBL19240 190.198 2.11544
     CHEMBL53569 186.166 2.5392
     CHEMBL6355 196.205 2.9462
-    >>>
+
 
 Other kinds of structural searches
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -136,7 +134,7 @@ Look for molecules in the database that are substructures of a query (i.e. where
     (CHEMBL14687) < CCCO >
     (CHEMBL16264) < CCOCC >
     (CHEMBL14079) < COC(=O)C >
-    >>>
+
 
 SMARTS-based Queries
 ~~~~~~~~~~~~~~~~~~~~
@@ -155,7 +153,7 @@ SMARTS-based Queries
     (CHEMBL7627) < COc1ccc(C[C@H](NC(Nc2cc3n(Cc4ccc(F)cc4)cc(CNC4CCCC4)c3cc2)=O)C(N[C@@H](CCCN=C(N)N)C(NCc2ccccc2)=O)=O)cc1 >
     (CHEMBL7346) < CCOC(c1ccc(NC(=O)Nc2cc3c(cc2)N(C)C(C)(C)C=C3C)cc1)=O >
     (CHEMBL7520) < CSCC[C@H](NC(Nc1ccccc1)=O)C(N[C@@H](CC(C)C)C(N[C@@H](Cc1ccccc1)C(O)=O)=O)=O >
-    >>>
+
 
 Exact match queries
 ~~~~~~~~~~~~~~~~~~~
@@ -164,7 +162,7 @@ Matching full structures is supported by using ``equals``::
 
     >>> print session.query(Compound).filter(Compound.structure.equals('c1ncncn1')).count()
 
-or by just using the equality operator ``==``:
+or by just using the equality operator ``==``::
 
     >>> print session.query(Compound).filter(Compound.structure == 'c1ncncn1').count()
 

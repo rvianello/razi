@@ -135,7 +135,6 @@ Finally, we can perform some queries. We can for example verify the number of co
 
     >>> print session.query(Compound).count()
     24956
-    >>> 
 
 or display the first 5 compounds::
 
@@ -147,7 +146,7 @@ or display the first 5 compounds::
     (CHEMBL6584) < CN(C)/C=N/c1nc(/N=C\N(C)C)c2c(ncc(Sc3cc(Cl)c(Cl)cc3)n2)n1 >
     (CHEMBL6585) < CC12C(C[C@@H](I)[C@@H]1O)C1C(c3ccc(O)cc3CC1)CC2 >
     (CHEMBL6637) < C/C(=C\Cn1oc(=O)[nH]c1=O)c1ccc(OCCc2nc(-c3ccc(C(F)(F)F)cc3)oc2C)cc1 >
-    >>> 
+
 
 Finally (and hopefully more interestingly), here's a first example of a more chemistry-aware query, searching the database for a given substructure::
 
@@ -161,7 +160,7 @@ Finally (and hopefully more interestingly), here's a first example of a more che
     ... 
     (CHEMBL12112) < CC(C)Sc1ccc(CC2CCN(C3CCN(C(=O)c4cnnc5ccccc54)CC3)CC2)cc1 >
     (CHEMBL26025) < Cc1cccc(NC(=O)Nc2ccc3nnccc3c2)c1 >
-    >>> 
+
 
 Please notice how the SQLAlchemy's ORM API allows the incremental specification of the filtering clause (or clauses) associated to the main selection query and how the ``subset`` instance is actually used twice, in two distinct queries (to compute the number of record matching the clause and to retrieve the actual records). In addition to this, the returned records can also serve as the basis for further queries, also using the chemical functions provided by the database backend:
 
@@ -171,4 +170,4 @@ Please notice how the SQLAlchemy's ORM API allows the incremental specification 
     ... 
     488.701
     278.315
-    >>> 
+

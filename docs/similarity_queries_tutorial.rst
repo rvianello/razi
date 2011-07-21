@@ -79,6 +79,7 @@ To populate the database the same data and code we used in the first tutorial is
 	session.add(compound)
     session.commit()
 
+
 Querying the database
 ---------------------
 
@@ -100,13 +101,11 @@ Tanimoto similarity using the current similarity cutoff::
     >>> # the current threshold value:
     >>> print session.query(Compound).filter(Compound.morgan.tanimoto_similar(query_bfp)).count()
     2
-    >>>
     
 Or using the Dice similarity::
 
     >>> print session.query(Compound).filter(Compound.morgan.dice_similar(query_bfp)).count()
     6
-    >>>
 
 Including the similarity values in the search results::
 
@@ -121,7 +120,7 @@ Including the similarity values in the search results::
     (CHEMBL6465) < Nc1nc(N)c2c(ncc(Sc3cc(Cl)c(Cl)cc3Cl)n2)n1 > 0.506024096386
     (CHEMBL6631) < COc1ccc(Sc2cnc3c(c(N)nc(N)n3)n2)cc1 > 0.5
     (CHEMBL57035) < CCN(CC)CCCNc1ncc2cc(-c3c(Cl)cccc3Cl)c(/N=C\N(C)C)nc2n1 > 0.5
-    >>>
+
 
 Similarity search using other fingerprints
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -149,7 +148,6 @@ The threshold values used by the Tanimoto and Dice filter operators are mapped t
     >>> from razi.postgresql_rdkit import tanimoto_threshold, dice_threshold
     >>> session.scalar(tanimoto_threshold), session.scalar(dice_threshold)
     (u'0.5', u'0.5')
-    >>> 
  
 The same expressions provide a mechanism to set a different cutoff::
 
@@ -157,5 +155,4 @@ The same expressions provide a mechanism to set a different cutoff::
     <sqlalchemy.engine.base.ResultProxy object at 0x1bbc5a10>
     >>> session.scalar(tanimoto_threshold), session.scalar(dice_threshold)
     (u'0.65', u'0.5')
-    >>> 
 
