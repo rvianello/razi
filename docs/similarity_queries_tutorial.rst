@@ -1,5 +1,5 @@
-Tutorial: Example similarity queries
-====================================
+Example similarity queries
+==========================
 
 This tutorial is again based on a similar document available from the `RDKit wiki <http://code.google.com/p/rdkit/wiki/ExampleSimilarityQueries>`_ and it illustrates how to use Razi to perform structure similarity queries on a chemical database.
 
@@ -144,7 +144,7 @@ and Tanimoto similarity between atom-pair fingerprints using the current similar
 Changing the similarity cutoff values
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The threshold values used by the Tanimoto and Dice filter operators are mapped to two expressions defined in module `razi.postgresql_rdkit`::
+The threshold values used by the Tanimoto and Dice filter operators are mapped to two expressions defined in module :py:mod:`razi.postgresql_rdkit`::
 
     >>> from razi.postgresql_rdkit import tanimoto_threshold, dice_threshold
     >>> session.scalar(tanimoto_threshold), session.scalar(dice_threshold)

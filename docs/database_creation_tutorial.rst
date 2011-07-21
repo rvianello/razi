@@ -1,5 +1,5 @@
-Tutorial: Creating a chemical database
-======================================
+Creating a chemical database
+============================
 
 This tutorial is based on a similar document available from the `RDKit wiki <http://code.google.com/p/rdkit/wiki/DatabaseCreation>`_ and it illustrates how to build a chemical database and perform some simple searches using Razi. The Python bindings for the RDKit libraries will be used in some data pre-processing steps, so you'll need to have them available on your system.
 
