@@ -186,114 +186,169 @@ class functions:
     """
     
     class smiles(BaseFunction):
+        """Translates a :class:`~razi.chemtypes.Molecule` into a SMILES string representation
+        """
         pass
     
     
     class mw(BaseFunction):
+        """Computes the molecular weight for a :class:`~razi.chemtypes.Molecule`"""
         pass
     
     
     class logp(BaseFunction):
+        """Estimates the LogP for a :class:`~razi.chemtypes.Molecule`"""
         pass
     
     
     class tpsa(BaseFunction):
+        """Computes the topological polar surface area for a :class:`~razi.chemtypes.Molecule`
+        """
         pass
     
     
     class hba(BaseFunction):
+        """Returns the number of hydrogen-bond acceptors for a :class:`~razi.chemtypes.Molecule`
+        """
         pass
     
 
     class hbd(BaseFunction):
+        """Returns the number of hydrogen-bond donors for a :class:`~razi.chemtypes.Molecule`
+        """
         pass
     
     
     class num_atoms(BaseFunction):
+        """Returns the total number of atoms in a :class:`~razi.chemtypes.Molecule`
+        """
         pass
     
     
     class num_hetatoms(BaseFunction):
+        """Returns the number of hetero atoms in a :class:`~razi.chemtypes.Molecule`
+        """
         pass
     
     
     class num_hvy_atoms(BaseFunction):
+        """Returns the number of heavy atoms in a :class:`~razi.chemtypes.Molecule`
+        """
         pass
     
     
     class num_rings(BaseFunction):
+        """Returns the number of rings in a :class:`~razi.chemtypes.Molecule`
+        """
         pass
     
     
     class num_rotatable_bonds(BaseFunction):
+        """Returns the number of rotatable bonds in a :class:`~razi.chemtypes.Molecule`
+        """
         pass
     
     
     class equals(DialectSpecificFunction):
+        """Returns true if two :class:`~razi.chemtypes.Molecule` objects represent the same structure.
+        
+        """
         pass
     
     
     class contains(DialectSpecificFunction):
+        """Returns true if the second argument represents a substructure of the :class:`~razi.chemtypes.Molecule` object. If the second argument is a string, SMILES semantic is assumed (the string is coerced to :class:`~razi.chemtypes.Molecule` type).
+        """
         pass
     
     
     class contained_in(DialectSpecificFunction):
+        """Superstructure test. Returns true if the first argument represents a fragment of the :class:`~razi.chemtypes.Molecule` object passed as second argument.
+        """
         pass
     
     
     class match(DialectSpecificFunction):
+        """Returns true if the second argument represents a substructure of the :class:`~razi.chemtypes.Molecule` object. If the second argument is a string, SMARTS semantic is assumed (the string is coerced to :class:`~razi.chemtypes.QMolecule` type).
+        """
         pass
     
     
     class morgan_b(BaseFunction):
+        """Returns a :class:`~razi.chemtypes.BitFingerprint` which is the bit vector Morgan fingerprint for a molecule using connectivity invariants. The second argument provides the radius. This is an ECFP-like fingerprint.
+        """
         pass
     
     
     class morgan_feat_b(BaseFunction):
+        """Returns a :class:`~razi.chemtypes.BitFingerprint` which is the bit vector Morgan fingerprint for a molecule using chemical-feature invariants. The second argument provides the radius. This is an FCFP-like fingerprint.
+        """
         pass
     
         
     class atompair_b(BaseFunction):
+        """Returns a :class:`~razi.chemtypes.BitFingerprint` which is the bit vector atom-pair fingerprint for a molecule. 
+        """
         pass
     
     
     class torsion_b(BaseFunction):
+        """Returns a :class:`~razi.chemtypes.BitFingerprint` which is the bit vector topological-torsion fingerprint for a molecule.
+        """
         pass
     
     
     class layered_b(BaseFunction):
+        """Returns a :class:`~razi.chemtypes.BitFingerprint` which is the layered fingerprint for a molecule. This is an experimental substructure fingerprint using hashed molecular subgraphs.
+        """
         pass
     
     
     class morgan_c(BaseFunction):
+        """Returns a :class:`~razi.chemtypes.CntFingerprint` which is the count-based Morgan fingerprint for a molecule using connectivity invariants. The second argument provides the radius. This is an ECFP-like fingerprint.
+        """
         pass
     
     
     class morgan_feat_c(BaseFunction):
+        """Returns a :class:`~razi.chemtypes.CntFingerprint` which is the count-based Morgan fingerprint for a molecule using chemical-feature invariants. The second argument provides the radius. This is an FCFP-like fingerprint. 
+        """
         pass
     
         
     class atompair_c(BaseFunction):
+        """Returns a :class:`~razi.chemtypes.CntFingerprint` which is the count-based atom-pair fingerprint for a molecule.
+        """
         pass
     
     
     class torsion_c(BaseFunction):
+        """Returns a :class:`~razi.chemtypes.CntFingerprint` which is the count-based topological-torsion fingerprint for a molecule.
+        """
         pass
     
     
     class tanimoto_similarity(BaseFunction):
+        """Returns the Tanimoto similarity between two fingerprints of the same type (either two :class:`~razi.chemtypes.CntFingerprint` or two :class:`~razi.chemtypes.BitFingerprint` values).
+        """
         pass
     
     
     class tanimoto_similar(DialectSpecificFunction):
+        """Returns true if the Tanimoto similarity between two fingerprints is higher than the currently set threshold value.
+        """
         pass
     
     
     class dice_similarity(BaseFunction):
+        """Returns the Dice similarity between two fingerprints of the same type (either two :class:`~razi.chemtypes.CntFingerprint` or two :class:`~razi.chemtypes.BitFingerprint` values).
+        """
         pass
     
     
     class dice_similar(DialectSpecificFunction):
+        """Returns true if the Dice similarity between two fingerprints is higher than the currently set threshold value.
+        """
         pass
     
     
