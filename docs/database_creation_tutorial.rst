@@ -73,7 +73,7 @@ to actually create the database schema, a method of the ``Base`` class ``metadat
 
     Base.metadata.create_all()
 
-In the present case this last command creates a table named ``compounds`` with columns ``id``, ``name`` and ``structure`` and also implicitly includes the creation of a structural index on the column with type ``Molecule``. 
+In the present case this last command creates a table named ``compounds`` with columns ``id``, ``name`` and ``structure`` and also implicitly includes the creation of a structural index on the column with type :class:`~razi.chemtypes.Molecule`. 
 
 Please notice that differently from ``id`` and ``name``, which are defined as plain SQLAlchemy ``Column`` attributes, ``structure`` is defined by a ``ChemColumn``.
 

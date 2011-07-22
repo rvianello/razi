@@ -24,7 +24,7 @@ also, define the database session factory object::
 Schema definition
 -----------------
 
-The define the mapping to the database table::
+Then define the mapping to the database table::
 
     from sqlalchemy.ext.declarative import declarative_base
     Base = declarative_base(bind=engine)
@@ -162,7 +162,7 @@ SMARTS-based Queries
 Exact match queries
 ~~~~~~~~~~~~~~~~~~~
 
-Matching full structures is supported by using ``equals``::
+Matching full structures is supported by using :class:`~razi.functions.functions.equals`::
 
     >>> print session.query(Compound).filter(Compound.structure.equals('c1ncncn1')).count()
 

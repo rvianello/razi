@@ -68,7 +68,7 @@ and the database schema is created::
 
     Base.metadata.create_all()
 
-In the present case this last command creates the ``compounds`` table and also implicitly includes the creation of indices on the columns with types ``Molecule`` and  ``BitFingerprint``. Please notice how in the constructor the fingerprint fields are initialized by database backend expressions invoked on the ``structure`` column.
+In the present case this last command creates the ``compounds`` table and also implicitly includes the creation of indices on the columns with types :class:`~razi.chemtypes.Molecule` and  :class:`~razi.chemtypes.BitFingerprint`. Please notice how in the constructor the fingerprint fields are initialized by database backend expressions invoked on the ``structure`` column.
 
 Inserting data
 --------------
