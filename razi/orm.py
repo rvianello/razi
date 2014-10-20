@@ -42,7 +42,7 @@ class CntFingerprintAttribute(AttributeExtension):
         return _to_cfp(value)
  
 
-class ChemComparator(ColumnProperty.ColumnComparator):
+class ChemComparator(ColumnProperty.Comparator):
     """Intercepts standard Column operators on mapped class attributes
         and overrides their behavior.
     """

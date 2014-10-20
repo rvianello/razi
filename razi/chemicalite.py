@@ -1,7 +1,7 @@
 from sqlalchemy import Column, select, func
 from sqlalchemy.sql.expression import and_, table, column
 
-from razi.chem import ChemComparator
+from razi.orm import ChemComparator
 from razi.chemtypes import Molecule, QMolecule
 from razi.expression import PersistentMoleculeElement, TxtMoleculeElement
 from razi.expression import TxtQMoleculeElement
@@ -13,7 +13,7 @@ def _configure_connection(connection):
     signtree = 'libsigntree.so'
     chemicalite = 'libchemicalite.so'
     connection.enable_load_extension(True)
-    connection.load_extension(signtree)
+    connection.load_extension(signtree)   
     connection.load_extension(chemicalite)
 
 

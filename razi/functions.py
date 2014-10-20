@@ -1,4 +1,10 @@
-from sqlalchemy.sql.expression import Function, ClauseElement
+from sqlalchemy.sql.expression import ClauseElement
+from sqlalchemy.sql import expression
+try:
+    from sqlalchemy.sql.functions import Function
+except ImportError:
+    # SQLAlchemy<0.9
+    Function = expression.Function
 from sqlalchemy.ext.compiler import compiles
 from sqlalchemy import literal
 
