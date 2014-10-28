@@ -3,6 +3,12 @@ from sqlalchemy.ext.compiler import compiles
 
 from razi.functions import functions, _get_function
 
+try:
+    from sqlalchemy.sql.functions import Function
+except ImportError:
+    # SQLAlchemy<0.9
+    Function = expression.Function
+
 class ChemElement(object):
     """Represents a molecular structure value."""
 
@@ -16,7 +22,7 @@ class ChemElement(object):
     def __getattr__(self, name):
         return getattr(functions, name)(self)
 
-class TxtChemElement(expression.Function):
+class TxtChemElement(Function):
     """Represents a chemical value expressed within application code (e.g a 
     SMILES string).
     
@@ -28,7 +34,7 @@ class TxtChemElement(expression.Function):
     def __init__(self, desc):
         assert isinstance(desc, basestring)
         self.desc = desc
-        expression.Function.__init__(self, "")
+        Function.__init__(self, "")
 
 
 @compiles(TxtChemElement)

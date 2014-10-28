@@ -4,7 +4,7 @@ from sqlalchemy.sql import func, cast, text
 from sqlalchemy.ext.compiler import compiles
 from sqlalchemy.sql.expression import ClauseElement, Executable
 
-from razi.chem import ChemComparator
+from razi.orm import ChemComparator
 from razi.chemtypes import Molecule, QMolecule, BitFingerprint, CntFingerprint
 from razi.expression import \
     PersistentMoleculeElement, PersistentBitFingerprintElement, \
