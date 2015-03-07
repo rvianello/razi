@@ -17,11 +17,10 @@ setup(name='razi',
       ],
       url='http://razi.readthedocs.org/',
       keywords='chemistry cheminformatics sqlalchemy orm',
-      packages = find_packages(exclude = [
-            'docs',
-            'docs.*',
-            ]),
+      packages=find_packages(exclude=[
+          'docs',
+          'docs.*',
+      ]),
       install_requires=[
           'SQLAlchemy>=0.7.0',
-      ],
-     )
+      ],)
