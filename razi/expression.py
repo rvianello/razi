@@ -9,6 +9,7 @@ except ImportError:
     # SQLAlchemy<0.9
     Function = expression.Function
 
+
 class ChemElement(object):
     """Represents a molecular structure value."""
 
@@ -16,21 +17,22 @@ class ChemElement(object):
         return self.desc
 
     def __repr__(self):
-        return "<%s at 0x%x; %r>" % (self.__class__.__name__, 
+        return "<%s at 0x%x; %r>" % (self.__class__.__name__,
                                      id(self), self.desc)
-    
+
     def __getattr__(self, name):
         return getattr(functions, name)(self)
 
+
 class TxtChemElement(Function):
-    """Represents a chemical value expressed within application code (e.g a 
+    """Represents a chemical value expressed within application code (e.g a
     SMILES string).
-    
-    Extends expression.Function so that in a SQL expression context the value 
-    is interpreted as 'txt_to_mol(value)' or as the equivalent function in 
+
+    Extends expression.Function so that in a SQL expression context the value
+    is interpreted as 'txt_to_mol(value)' or as the equivalent function in
     the currently used database as appropriate for the given type.
     """
-    
+
     def __init__(self, desc):
         assert isinstance(desc, basestring)
         self.desc = desc
@@ -39,25 +41,26 @@ class TxtChemElement(Function):
 
 @compiles(TxtChemElement)
 def __compile_txtchemelement(element, compiler, **kw):
-    function = _get_function(element, compiler, [element.desc], 
+    function = _get_function(element, compiler, [element.desc],
                              kw.get('within_columns_clause', False))
     return compiler.process(function)
 
-    
+
 class MoleculeElement(ChemElement):
     pass
+
 
 class TxtMoleculeElement(MoleculeElement, TxtChemElement):
     """Represents a Molecule value expressed within application code (a SMILES).
     """
-    
+
     def __init__(self, desc):
         TxtChemElement.__init__(self, desc)
-        
-        
+
+
 class PersistentMoleculeElement(MoleculeElement):
     """Represents a Molecule value loaded from the database."""
-    
+
     def __init__(self, desc):
         self.desc = desc
 
@@ -70,14 +73,14 @@ class TxtQMoleculeElement(QMoleculeElement, TxtChemElement):
     """Represents a chemical fragment pattern expressed within application code
     (i.e. a SMARTS string)
     """
-    
+
     def __init__(self, desc):
         TxtChemElement.__init__(self, desc)
 
 
 class PersistentQMoleculeElement(QMoleculeElement):
     """Represents a Molecule value loaded from the database."""
-    
+
     def __init__(self, desc):
         self.desc = desc
 
@@ -88,7 +91,7 @@ class BitFingerprintElement(ChemElement):
 
 class PersistentBitFingerprintElement(BitFingerprintElement):
     """Represents a BitFingerprint value loaded from the database."""
-    
+
     def __init__(self, desc):
         self.desc = desc
 
@@ -99,7 +102,7 @@ class CntFingerprintElement(ChemElement):
 
 class PersistentCntFingerprintElement(CntFingerprintElement):
     """Represents a CntFingerprint value loaded from the database."""
-    
+
     def __init__(self, desc):
         self.desc = desc
 
@@ -117,6 +120,7 @@ def _to_mol(value):
         return None
     else:
         raise TypeError
+
 
 def _to_bfp(value):
     """Interpret a value as a BitFingerprint-compatible construct."""
@@ -142,6 +146,3 @@ def _to_cfp(value):
         return None
     else:
         raise TypeError
-
-
-    
