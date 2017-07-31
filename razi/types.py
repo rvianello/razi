@@ -3,8 +3,11 @@ from sqlalchemy.types import UserDefinedType, TypeEngine
 
 from rdkit.Chem import AllChem as Chem
 
+from .comparator import MolComparator
 
 class Mol(UserDefinedType):
+
+    comparator_factory = MolComparator
 
     def get_col_spec(self, **kw):
         return 'mol'
