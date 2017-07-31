@@ -50,6 +50,44 @@ _FUNCTIONS = [
     ('mol_kappa1', sqltypes.Float, None,),
     ('mol_kappa2', sqltypes.Float, None,),
     ('mol_kappa3', sqltypes.Float, None,),
+
+    ('mol_hba', sqltypes.Integer, None,),
+    ('mol_hbd', sqltypes.Integer, None,),
+    ('mol_numrotatablebonds', sqltypes.Integer, None,),
+    ('mol_numatoms', sqltypes.Integer, None,),
+    ('mol_numheavyatoms', sqltypes.Integer, None,),
+    ('mol_numheteroatoms', sqltypes.Integer, None,),
+    ('mol_numrings', sqltypes.Integer, None,),
+    ('mol_numaromaticrings', sqltypes.Integer, None,),
+    ('mol_numaliphaticrings', sqltypes.Integer, None,),
+    ('mol_numsaturatedrings', sqltypes.Integer, None,),
+    ('mol_numaromaticheterocycles', sqltypes.Integer, None,),
+    ('mol_numaliphaticheterocycles', sqltypes.Integer, None,),
+    ('mol_numsaturatedheterocycles', sqltypes.Integer, None,),
+    ('mol_numaromaticcarbocycles', sqltypes.Integer, None,),
+    ('mol_numaliphaticcarbocycles', sqltypes.Integer, None,),
+    ('mol_numsaturatedcarbocycles', sqltypes.Integer, None,),
+    ('mol_numheterocycles', sqltypes.Integer, None,),
+    ('mol_numspiroatoms', sqltypes.Integer, None,),
+    ('mol_numbridgeheadatoms', sqltypes.Integer, None,),
+
+    ('mol_formula', sqltypes.String, None,),
+    ('mol_inchi', sqltypes.String, None,),
+    ('mol_inchikey', sqltypes.String, None,),
+    ('mol_murckoscaffold', sqltypes.String, None,),
+    ('mol_hash', sqltypes.String, None,),
+
+    #
+    # utility functions
+    #
+
+    ('rdkit_version', sqltypes.String, None,),
+    ('is_valid_smiles', sqltypes.Boolean, None,),
+    ('is_valid_smarts', sqltypes.Boolean, None,),
+    ('is_valid_ctab', sqltypes.Boolean, None,),
+    ('is_valid_mol_pkl', sqltypes.Boolean, None,),
+    ('substruct_count', sqltypes.Integer, None,),
+
 ]
 
 # Iterate through _FUNCTION and create GenericFunction classes dynamically
