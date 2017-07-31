@@ -1,4 +1,4 @@
-from sqlalchemy import String
+from sqlalchemy import types as sqltypes
 from sqlalchemy.sql import functions
 from sqlalchemy.dialects import postgresql
 
@@ -23,11 +23,33 @@ _FUNCTIONS = [
     # mol conversion functions
     #
 
-    ('mol_to_smiles', String, None,),
-    ('mol_to_smarts', String, None,),
-    ('mol_to_ctab', String, None,),
-    ('mol_to_svg', String, None,),
+    ('mol_to_smiles', sqltypes.String, None,),
+    ('mol_to_smarts', sqltypes.String, None,),
+    ('mol_to_ctab', sqltypes.String, None,),
+    ('mol_to_svg', sqltypes.String, None,),
     ('mol_to_pkl', postgresql.BYTEA, None,),
+
+    #
+    # mol descriptors
+    #
+
+    ('mol_amw', sqltypes.Float, None,),
+    ('mol_logp', sqltypes.Float, None,),
+    ('mol_fractioncsp3', sqltypes.Float, None,),
+    ('mol_tpsa', sqltypes.Float, None,),
+    ('mol_chi0n', sqltypes.Float, None,),
+    ('mol_chi1n', sqltypes.Float, None,),
+    ('mol_chi2n', sqltypes.Float, None,),
+    ('mol_chi3n', sqltypes.Float, None,),
+    ('mol_chi4n', sqltypes.Float, None,),
+    ('mol_chi0v', sqltypes.Float, None,),
+    ('mol_chi1v', sqltypes.Float, None,),
+    ('mol_chi2v', sqltypes.Float, None,),
+    ('mol_chi3v', sqltypes.Float, None,),
+    ('mol_chi4v', sqltypes.Float, None,),
+    ('mol_kappa1', sqltypes.Float, None,),
+    ('mol_kappa2', sqltypes.Float, None,),
+    ('mol_kappa3', sqltypes.Float, None,),
 ]
 
 # Iterate through _FUNCTION and create GenericFunction classes dynamically
