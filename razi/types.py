@@ -37,3 +37,27 @@ class Mol(UserDefinedType):
                 raise RuntimeError(
                     "Unexpected row value type for a Mol instance")
         return process
+
+
+class QMol(UserDefinedType):
+
+    def get_col_spec(self, **kw):
+        return 'qmol'
+
+
+class Bfp(UserDefinedType):
+
+    def get_col_spec(self, **kw):
+        return 'bfp'
+
+
+class Sfp(UserDefinedType):
+
+    def get_col_spec(self, **kw):
+        return 'sfp'
+
+
+class Reaction(UserDefinedType):
+
+    def get_col_spec(self, **kw):
+        return 'reaction'
