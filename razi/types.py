@@ -89,5 +89,7 @@ class Sfp(UserDefinedType):
 
 class Reaction(UserDefinedType):
 
+    comparator_factory = comparator.ReactionComparator
+
     def get_col_spec(self, **kw):
         return 'reaction'

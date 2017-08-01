@@ -111,6 +111,30 @@ _FUNCTIONS = [
     ('bfp_size', sqltypes.Integer, None,),
 
     #
+    # reaction constructors
+    #
+
+    ('reaction_from_smiles', types.Reaction, None,),
+    ('reaction_from_smarts', types.Reaction, None,),
+    ('reaction_from_ctab', types.Reaction, None,),
+
+    #
+    # reaction conversion functions
+    #
+
+    ('reaction_to_smiles', sqltypes.String, None,),
+    ('reaction_to_smarts', sqltypes.String, None,),
+    ('reaction_to_ctab', sqltypes.String, None,),
+
+    #
+    # reaction descriptors
+    #
+
+    ('reaction_numreactants', sqltypes.Integer, None,),
+    ('reaction_numproducts', sqltypes.Integer, None,),
+    ('reaction_numagents', sqltypes.Integer, None,),
+
+    #
     # similarity functions
     #
 

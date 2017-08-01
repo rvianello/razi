@@ -34,3 +34,26 @@ class FpComparator(UserDefinedType.Comparator):
         return self.operate(
             operators.custom_op('#'), other, result_type=sqltypes.Boolean
             )
+
+
+class ReactionComparator(UserDefinedType.Comparator):
+
+    def hassubstruct(self, other):
+        return self.operate(
+            operators.custom_op('@>'), other, result_type=sqltypes.Boolean
+            )
+
+    def hassubstructfp(self, other):
+        return self.operate(
+            operators.custom_op('?>'), other, result_type=sqltypes.Boolean
+            )
+
+    def issubstruct(self, other):
+        return self.operate(
+            operators.custom_op('<@'), other, result_type=sqltypes.Boolean
+            )
+
+    def issubstructfp(self, other):
+        return self.operate(
+            operators.custom_op('<?'), other, result_type=sqltypes.Boolean
+            )
