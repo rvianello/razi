@@ -13,3 +13,24 @@ class MolComparator(UserDefinedType.Comparator):
         return self.operate(
             operators.custom_op('<@'), other, result_type=sqltypes.Boolean
             )
+
+
+class QMolComparator(UserDefinedType.Comparator):
+
+    def issubstruct(self, other):
+        return self.operate(
+            operators.custom_op('<@'), other, result_type=sqltypes.Boolean
+            )
+
+
+class FpComparator(UserDefinedType.Comparator):
+
+    def tanimoto_sml(self, other):
+        return self.operate(
+            operators.custom_op('%'), other, result_type=sqltypes.Boolean
+            )
+
+    def dice_sml(self, other):
+        return self.operate(
+            operators.custom_op('#'), other, result_type=sqltypes.Boolean
+            )

@@ -23,8 +23,8 @@ _FUNCTIONS = [
     # mol conversion functions
     #
 
-    ('mol_to_smiles', sqltypes.String, None,),
-    ('mol_to_smarts', sqltypes.String, None,),
+    ('mol_to_smiles', sqltypes.String, None,), # also supports qmol input
+    ('mol_to_smarts', sqltypes.String, None,), # also supports qmol input
     ('mol_to_ctab', sqltypes.String, None,),
     ('mol_to_svg', sqltypes.String, None,),
     ('mol_to_pkl', postgresql.BYTEA, None,),
@@ -78,6 +78,50 @@ _FUNCTIONS = [
     ('mol_hash', sqltypes.String, None,),
 
     #
+    # qmol constructors
+    #
+
+    ('qmol_from_smiles', types.QMol, None,),
+    ('qmol_from_ctab', types.QMol, None,),
+
+    #
+    # bfp constructors
+    #
+
+    ('bfp_from_binary_text', types.Bfp, None,),
+    ('avalon_fp', types.Bfp, None,),
+    ('layered_fp', types.Bfp, None,),
+    ('maccs_fp', types.Bfp, None,),
+    ('rdkit_fp', types.Bfp, None,),
+    ('atompairbv_fp', types.Bfp, None,),
+    ('featmorganbv_fp', types.Bfp, None,),
+    ('morganbv_fp', types.Bfp, None,),
+    ('torsionbv_fp', types.Bfp, None,),
+    ('reaction_structural_bfp', types.Bfp, None,),
+
+    #
+    # bfp conversion functions
+    #
+
+    ('bfp_to_binary_text', postgresql.BYTEA, None,),
+
+    #
+    # bfp integer descriptors
+
+    ('bfp_size', sqltypes.Integer, None,),
+
+    #
+    # similarity functions
+    #
+
+    ('tanimoto_sml', sqltypes.Float, None,),
+    ('dice_sml', sqltypes.Float, None,),
+    ('tversky_sml', sqltypes.Float, None,),
+
+    ('tanimoto_dist', sqltypes.Float, None,),
+    ('dice_dist', sqltypes.Float, None,),
+
+    #
     # utility functions
     #
 
@@ -90,7 +134,7 @@ _FUNCTIONS = [
 
 ]
 
-# Iterate through _FUNCTION and create GenericFunction classes dynamically
+# Iterate through _FUNCTIONS and create GenericFunction classes dynamically
 for name, type_, doc in _FUNCTIONS:
     attributes = {'name': name}
     docs = []
