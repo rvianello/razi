@@ -51,7 +51,7 @@ class QMol(UserDefinedType):
 
 class Bfp(UserDefinedType):
 
-    comparator_factory = comparator.FpComparator
+    comparator_factory = comparator.BfpComparator
 
     def get_col_spec(self, **kw):
         return 'bfp'
@@ -82,6 +82,8 @@ class Bfp(UserDefinedType):
 
 
 class Sfp(UserDefinedType):
+
+    comparator_factory = comparator.SfpComparator
 
     def get_col_spec(self, **kw):
         return 'sfp'

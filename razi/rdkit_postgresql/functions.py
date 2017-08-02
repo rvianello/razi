@@ -107,8 +107,28 @@ _FUNCTIONS = [
 
     #
     # bfp integer descriptors
+    #
 
     ('bfp_size', sqltypes.Integer, None,),
+
+    #
+    # sfp constructors
+    #
+
+    ('atompair_fp', types.Sfp, None,),
+    ('featmorgan_fp', types.Sfp, None,),
+    ('morgan_fp', types.Sfp, None,),
+    ('torsion_fp', types.Sfp, None,),
+    ('reaction_difference_fp', types.Sfp, None,),
+
+    #
+    # sfp processing functions
+    #
+
+    ('add', types.Sfp, None,),
+    ('subtract', types.Sfp, None,),
+    ('all_values_gt', sqltypes.Boolean, None,),
+    ('all_values_lt', sqltypes.Boolean, None,),
 
     #
     # reaction constructors
