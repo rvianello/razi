@@ -1,6 +1,7 @@
 import unittest
 
 from sqlalchemy import create_engine, MetaData
+from sqlalchemy import Table, Column, Integer, Index
 
 from razi.rdkit_postgresql.types import Mol
 
