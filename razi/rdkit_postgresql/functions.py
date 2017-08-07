@@ -12,6 +12,8 @@ _FUNCTIONS = [
     # mol constructors
     #
 
+    ('mol', types.Mol, None,),
+
     ('mol_from_smiles', types.Mol, None,),
     ('mol_from_smarts', types.Mol, None,),
     ('mol_from_ctab', types.Mol, None,),
@@ -80,6 +82,7 @@ _FUNCTIONS = [
     #
     # qmol constructors
     #
+    ('qmol_from_smiles', types.QMol, None,),
 
     ('qmol_from_smiles', types.QMol, None,),
     ('qmol_from_ctab', types.QMol, None,),
