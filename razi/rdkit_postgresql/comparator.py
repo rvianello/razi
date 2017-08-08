@@ -15,6 +15,10 @@ class MolComparator(UserDefinedType.Comparator):
             operators.custom_op('<@'), other, result_type=sqltypes.Boolean
             )
 
+    def samestruct(self, other):
+        return self.operate(
+            operators.custom_op('@='), other, result_type=sqltypes.Boolean
+            )
 
 class QMolComparator(UserDefinedType.Comparator):
 
