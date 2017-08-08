@@ -61,6 +61,20 @@ M  END'''
         rs = engine.execute(select([ func.mol_from_ctab(ctab) ]))
         self.assertIsInstance(rs.fetchall()[0][0], Chem.Mol)
 
+    def test_mol_to_ctab(self):
+
+        rs = engine.execute(select([ func.mol_to_ctab(func.mol('CCC')) ]))
+        self.assertEqual(rs.fetchall()[0][0], '''
+     RDKit          2D
+
+  3  2  0  0  0  0  0  0  0  0999 V2000
+    0.0000    0.0000    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+    1.2990    0.7500    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+    2.5981   -0.0000    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+  1  2  1  0
+  2  3  1  0
+M  END
+''')
 
     def test_mol_from_smarts(self):
 
