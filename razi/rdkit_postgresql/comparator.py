@@ -15,10 +15,11 @@ class MolComparator(UserDefinedType.Comparator):
             operators.custom_op('<@'), other, result_type=sqltypes.Boolean
             )
 
-    def samestruct(self, other):
+    def __eq__(self, other):
         return self.operate(
             operators.custom_op('@='), other, result_type=sqltypes.Boolean
             )
+
 
 class QMolComparator(UserDefinedType.Comparator):
 
@@ -80,4 +81,9 @@ class ReactionComparator(UserDefinedType.Comparator):
     def issubstructfp(self, other):
         return self.operate(
             operators.custom_op('<?'), other, result_type=sqltypes.Boolean
+            )
+
+    def __eq__(self, other):
+        return self.operate(
+            operators.custom_op('@='), other, result_type=sqltypes.Boolean
             )

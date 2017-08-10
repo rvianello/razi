@@ -114,12 +114,12 @@ M  END
     def test_mol_samestruct(self):
 
         rs = engine.execute(
-            select([ func.mol('Cc1ccccc1').samestruct(func.mol('c1ccccc1C')) ])
+            select([ func.mol('Cc1ccccc1') == func.mol('c1ccccc1C') ])
         )
         self.assertTrue(rs.fetchall()[0][0])
 
         rs = engine.execute(
-            select([ func.mol('Cc1ccccc1').samestruct(func.mol('c1cnccc1C')) ])
+            select([ func.mol('Cc1ccccc1') == func.mol('c1cnccc1C') ])
         )
         self.assertFalse(rs.fetchall()[0][0])
 
