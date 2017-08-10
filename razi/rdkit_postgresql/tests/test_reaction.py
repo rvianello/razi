@@ -64,3 +64,49 @@ class ReactionBasicTestCase(unittest.TestCase):
             select([func.reaction_to_smiles(func.reaction_from_smiles('c1ccccc1>>c1cccnc1'))])
             )
         self.assertEqual(rs.fetchall()[0][0], 'c1ccccc1>>c1ccncc1')
+
+        rs = conn.execute(
+            select([func.reaction_from_ctab('''$RXN
+
+      RDKit
+
+  1  1
+$MOL
+
+     RDKit
+
+  6  6  0  0  0  0  0  0  0  0999 V2000
+    0.0000    0.0000    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+    0.0000    0.0000    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+    0.0000    0.0000    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+    0.0000    0.0000    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+    0.0000    0.0000    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+    0.0000    0.0000    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+  1  2  4  0
+  2  3  4  0
+  3  4  4  0
+  4  5  4  0
+  5  6  4  0
+  6  1  4  0
+M  END
+$MOL
+
+     RDKit
+
+  6  6  0  0  0  0  0  0  0  0999 V2000
+    0.0000    0.0000    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+    0.0000    0.0000    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+    0.0000    0.0000    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+    0.0000    0.0000    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+    0.0000    0.0000    0.0000 N   0  0  0  0  0  0  0  0  0  0  0  0
+    0.0000    0.0000    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+  1  2  4  0
+  2  3  4  0
+  3  4  4  0
+  4  5  4  0
+  5  6  4  0
+  6  1  4  0
+M  END
+''')])
+        )
+        self.assertEqual(rs.fetchall()[0][0], 'c1ccccc1>>c1ccncc1')
