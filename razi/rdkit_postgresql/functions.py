@@ -137,6 +137,8 @@ _FUNCTIONS = [
     # reaction constructors
     #
 
+    ('reaction', types.Reaction, None,),
+
     ('reaction_from_smiles', types.Reaction, None,),
     ('reaction_from_smarts', types.Reaction, None,),
     ('reaction_from_ctab', types.Reaction, None,),

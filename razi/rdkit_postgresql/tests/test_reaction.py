@@ -110,3 +110,62 @@ M  END
 ''')])
         )
         self.assertEqual(rs.fetchall()[0][0], 'c1ccccc1>>c1ccncc1')
+
+        rs = conn.execute(
+            select([func.reaction_numreactants(func.reaction_from_smiles('[Cl].c1ccccc1>>c1cccnc1.[OH2]'))])
+            )
+        self.assertEqual(rs.fetchall()[0][0], 2)
+
+        rs = conn.execute(
+            select([func.reaction_numproducts(func.reaction_from_smiles('[Cl].c1ccccc1>>c1cccnc1.[OH2]'))])
+            )
+        self.assertEqual(rs.fetchall()[0][0], 2)
+
+        rs = conn.execute(
+            select([func.reaction_numagents(func.reaction_from_smiles('[Cl].c1ccccc1>CC(=O)O.[Na+]>c1cccnc1.[OH2]'))])
+            )
+        self.assertEqual(rs.fetchall()[0][0], 2)
+
+        rs = conn.execute(
+            select([func.reaction_numagents(func.reaction_from_smarts('C(F)(F)F.[c1:1][c:2][c:3][c:4]c[c1:5]>CC(=O)O>[c1:1][c:2][c:3][c:4]n[c1:5]'))])
+            )
+        self.assertEqual(rs.fetchall()[0][0], 2)
+
+        conn.execute(stmt, [
+            {'param': 'rdkit.move_unmmapped_reactants_to_agents',
+             'value': False},
+            ])
+
+        rs = conn.execute(
+            select([func.reaction_numagents(func.reaction_from_smarts('C(F)(F)F.[c1:1][c:2][c:3][c:4]c[c1:5]>CC(=O)O>[c1:1][c:2][c:3][c:4]n[c1:5]'))])
+            )
+        self.assertEqual(rs.fetchall()[0][0], 1)
+
+        conn.execute(stmt, [
+            {'param': 'rdkit.move_unmmapped_reactants_to_agents',
+             'value': True},
+            {'param': 'rdkit.threshold_unmapped_reactant_atoms',
+             'value': 0.9},
+            ])
+
+        rs = conn.execute(
+            select([func.reaction_numagents(func.reaction_from_smarts('C(F)(F)F.[c1:1][c:2][c:3][c:4]c[c1:5]>CC(=O)O>[c1:1][c:2][c:3][c:4]n[c1:5]'))])
+            )
+        self.assertEqual(rs.fetchall()[0][0], 3)
+
+        conn.execute(stmt, [
+            {'param': 'rdkit.threshold_unmapped_reactant_atoms',
+             'value': 0.2},
+            ])
+
+        rs = conn.execute(
+            select([ func.reaction('c1ccccc1>>c1cccnc1') ==
+                     func.reaction('c1ccccc1>>c1cccnc1') ])
+            )
+        self.assertEqual(rs.fetchall()[0][0], True)
+
+        rs = conn.execute(
+            select([ func.reaction('c1ccccc1>>c1cccnc1') ==
+                     func.reaction('c1ccccc1>>c1cncnc1') ])
+            )
+        self.assertEqual(rs.fetchall()[0][0], False)
