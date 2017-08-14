@@ -1,12 +1,19 @@
+import os
 import unittest
 
 from sqlalchemy import create_engine, MetaData
-from sqlalchemy import Table, select, func, bindparam
+from sqlalchemy import select, func, bindparam
+from sqlalchemy import Table, Column, Integer, Index
+
+from rdkit.Chem import AllChem as Chem
+
+from razi.rdkit_postgresql.types import Reaction
+
 
 engine = create_engine('postgresql://localhost/razi-rdkit-postgresql-test')
-metadata = MetaData(engine)
 
-pg_settings = Table('pg_settings', metadata,
+sys_metadata = MetaData(engine)
+pg_settings = Table('pg_settings', sys_metadata,
                     autoload=True, autoload_with=engine)
 
 
@@ -14,16 +21,14 @@ class ReactionBasicTestCase(unittest.TestCase):
 
     def test_reaction(self):
 
-        conn = engine.connect()
-
         # dummy query to ensure that GUC params are initialized
-        _ = conn.execute(select([ func.rdkit_version() ]))
+        _ = engine.execute(select([ func.rdkit_version() ])).fetchall()
 
         stmt = pg_settings.update()
         stmt = stmt.where(pg_settings.c.name == bindparam('param'))
         stmt = stmt.values(setting=bindparam('value'))
 
-        conn.execute(stmt, [
+        engine.execute(stmt, [
             {'param': 'rdkit.ignore_reaction_agents', 'value': False},
             {'param': 'rdkit.agent_FP_bit_ratio', 'value': 0.2},
             {'param': 'rdkit.difference_FP_weight_agents', 'value': 1},
@@ -35,37 +40,37 @@ class ReactionBasicTestCase(unittest.TestCase):
             {'param': 'rdkit.init_reaction', 'value': True},
             ])
 
-        rs = conn.execute(
+        rs = engine.execute(
             select([func.reaction_from_smiles('c1ccccc1>>c1cccnc1')])
             )
         self.assertEqual(rs.fetchall()[0][0], 'c1ccccc1>>c1ccncc1')
 
-        rs = conn.execute(
+        rs = engine.execute(
             select([func.reaction_from_smiles('c1ccccc1>CC(=O)O>c1cccnc1')])
             )
         self.assertEqual(rs.fetchall()[0][0], 'c1ccccc1>CC(=O)O>c1ccncc1')
 
-        rs = conn.execute(
+        rs = engine.execute(
             select([func.reaction_from_smarts('[c1:1][c:2][c:3][c:4]c[c1:5]>CC(=O)O>[c1:1][c:2][c:3][c:4]n[c1:5]')])
             )
         self.assertEqual(rs.fetchall()[0][0], 'c([cH:4][cH:3][cH:2][cH2:1])[cH2:5]>CC(=O)O>n([cH:4][cH:3][cH:2][cH2:1])[cH2:5]')
 
-        rs = conn.execute(
+        rs = engine.execute(
             select([func.reaction_from_smarts('C(F)(F)F.[c1:1][c:2][c:3][c:4]c[c1:5]>CC(=O)O>[c1:1][c:2][c:3][c:4]n[c1:5]')])
             )
         self.assertEqual(rs.fetchall()[0][0], 'c([cH:4][cH:3][cH:2][cH2:1])[cH2:5]>CC(=O)O.FC(F)F>n([cH:4][cH:3][cH:2][cH2:1])[cH2:5]')
 
-        rs = conn.execute(
+        rs = engine.execute(
             select([func.reaction_from_smarts('c1ccc[n,c]c1>>c1nccnc1')])
             )
         self.assertEqual(rs.fetchall()[0][0], 'c1ccncc1>>c1cnccn1')
 
-        rs = conn.execute(
+        rs = engine.execute(
             select([func.reaction_to_smiles(func.reaction_from_smiles('c1ccccc1>>c1cccnc1'))])
             )
         self.assertEqual(rs.fetchall()[0][0], 'c1ccccc1>>c1ccncc1')
 
-        rs = conn.execute(
+        rs = engine.execute(
             select([func.reaction_from_ctab('''$RXN
 
       RDKit
@@ -111,61 +116,164 @@ M  END
         )
         self.assertEqual(rs.fetchall()[0][0], 'c1ccccc1>>c1ccncc1')
 
-        rs = conn.execute(
+        rs = engine.execute(
             select([func.reaction_numreactants(func.reaction_from_smiles('[Cl].c1ccccc1>>c1cccnc1.[OH2]'))])
             )
         self.assertEqual(rs.fetchall()[0][0], 2)
 
-        rs = conn.execute(
+        rs = engine.execute(
             select([func.reaction_numproducts(func.reaction_from_smiles('[Cl].c1ccccc1>>c1cccnc1.[OH2]'))])
             )
         self.assertEqual(rs.fetchall()[0][0], 2)
 
-        rs = conn.execute(
+        rs = engine.execute(
             select([func.reaction_numagents(func.reaction_from_smiles('[Cl].c1ccccc1>CC(=O)O.[Na+]>c1cccnc1.[OH2]'))])
             )
         self.assertEqual(rs.fetchall()[0][0], 2)
 
-        rs = conn.execute(
+        rs = engine.execute(
             select([func.reaction_numagents(func.reaction_from_smarts('C(F)(F)F.[c1:1][c:2][c:3][c:4]c[c1:5]>CC(=O)O>[c1:1][c:2][c:3][c:4]n[c1:5]'))])
             )
         self.assertEqual(rs.fetchall()[0][0], 2)
 
-        conn.execute(stmt, [
+        engine.execute(stmt, [
             {'param': 'rdkit.move_unmmapped_reactants_to_agents',
              'value': False},
             ])
 
-        rs = conn.execute(
+        rs = engine.execute(
             select([func.reaction_numagents(func.reaction_from_smarts('C(F)(F)F.[c1:1][c:2][c:3][c:4]c[c1:5]>CC(=O)O>[c1:1][c:2][c:3][c:4]n[c1:5]'))])
             )
         self.assertEqual(rs.fetchall()[0][0], 1)
 
-        conn.execute(stmt, [
+        engine.execute(stmt, [
             {'param': 'rdkit.move_unmmapped_reactants_to_agents',
              'value': True},
             {'param': 'rdkit.threshold_unmapped_reactant_atoms',
              'value': 0.9},
             ])
 
-        rs = conn.execute(
+        rs = engine.execute(
             select([func.reaction_numagents(func.reaction_from_smarts('C(F)(F)F.[c1:1][c:2][c:3][c:4]c[c1:5]>CC(=O)O>[c1:1][c:2][c:3][c:4]n[c1:5]'))])
             )
         self.assertEqual(rs.fetchall()[0][0], 3)
 
-        conn.execute(stmt, [
+        engine.execute(stmt, [
             {'param': 'rdkit.threshold_unmapped_reactant_atoms',
              'value': 0.2},
             ])
 
-        rs = conn.execute(
+        rs = engine.execute(
             select([ func.reaction('c1ccccc1>>c1cccnc1') ==
                      func.reaction('c1ccccc1>>c1cccnc1') ])
             )
         self.assertEqual(rs.fetchall()[0][0], True)
 
-        rs = conn.execute(
+        rs = engine.execute(
             select([ func.reaction('c1ccccc1>>c1cccnc1') ==
                      func.reaction('c1ccccc1>>c1cncnc1') ])
             )
         self.assertEqual(rs.fetchall()[0][0], False)
+
+
+metadata = MetaData(engine)
+
+reactions = Table(
+    'reactions', metadata,
+    Column('id', Integer, primary_key=True),
+    Column('rxn', Reaction),
+    )
+
+reactions_unchanged = Table(
+    'reactions_unchanged', metadata,
+    Column('id', Integer, primary_key=True),
+    Column('rxn', Reaction),
+    )
+
+
+_test_dir = os.path.dirname(__file__)
+for _ in range(3):
+    _test_dir = os.path.dirname(_test_dir)
+_test_dir = os.path.join(_test_dir, 'test_data')
+
+data_filepath = os.path.join(_test_dir, 'reaction_test_data.out.rsmi')
+
+
+class ReactionInsertTestCase(unittest.TestCase):
+
+    def setUp(self):
+        metadata.create_all()
+
+    def tearDown(self):
+        metadata.drop_all()
+
+    def test_reaction_insert(self):
+
+        self.assertTrue(os.path.exists(data_filepath))
+
+        with open(data_filepath, 'rt') as f:
+            sample_data = [line.split() for line in f]
+
+        # dummy query to ensure that GUC params are initialized
+        _ = engine.execute(select([ func.rdkit_version() ])).fetchall()
+
+        stmt = pg_settings.update()
+        stmt = stmt.where(pg_settings.c.name == bindparam('param'))
+        stmt = stmt.values(setting=bindparam('value'))
+
+        engine.execute(stmt, [
+            {'param': 'rdkit.ignore_reaction_agents', 'value': False},
+            {'param': 'rdkit.agent_FP_bit_ratio', 'value': 0.2},
+            {'param': 'rdkit.difference_FP_weight_agents', 'value': 1},
+            {'param': 'rdkit.difference_FP_weight_nonagents', 'value': 10},
+            {'param': 'rdkit.move_unmmapped_reactants_to_agents',
+             'value': True},
+            {'param': 'rdkit.threshold_unmapped_reactant_atoms',
+             'value': 0.2},
+            {'param': 'rdkit.init_reaction', 'value': True},
+            ])
+
+        engine.execute(
+            reactions.insert(),
+            [ { 'rxn': rsmiles, } for _, rsmiles in sample_data ],
+            )
+
+        rs = engine.execute(select([func.count()]).select_from(reactions))
+        sz = rs.fetchall()[0][0]
+        self.assertEqual(sz, len(sample_data))
+
+        engine.execute(stmt, [
+            {'param': 'rdkit.move_unmmapped_reactants_to_agents',
+             'value': False},
+            ])
+
+        engine.execute(
+            reactions_unchanged.insert(),
+            [ { 'rxn': rsmiles, } for _, rsmiles in sample_data ],
+            )
+
+        engine.execute(stmt, [
+            {'param': 'rdkit.move_unmmapped_reactants_to_agents',
+             'value': True},
+            ])
+
+        rs = engine.execute(
+            select([func.count()]).select_from(reactions_unchanged))
+        sz = rs.fetchall()[0][0]
+        self.assertEqual(sz, len(sample_data))
+
+        rs = engine.execute(
+            select([
+                func.sum(func.reaction_numreactants(reactions.c.rxn))
+                ])
+            )
+        sum_reactants = rs.fetchall()[0][0]
+        self.assertEqual(sum_reactants, 1898)
+
+        rs = engine.execute(
+            select([
+                func.sum(func.reaction_numreactants(reactions_unchanged.c.rxn))
+                ])
+            )
+        sum_reactants = rs.fetchall()[0][0]
+        self.assertEqual(sum_reactants, 3517)
