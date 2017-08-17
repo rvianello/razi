@@ -182,12 +182,14 @@ reactions = Table(
     'reactions', metadata,
     Column('id', Integer, primary_key=True),
     Column('rxn', Reaction),
+    Index('reactions_rxn', 'rxn', postgresql_using='gist'),
     )
 
 reactions_unchanged = Table(
     'reactions_unchanged', metadata,
     Column('id', Integer, primary_key=True),
     Column('rxn', Reaction),
+    #Index('reactions_unchanged_rxn', 'rxn', postgresql_using='gist'),
     )
 
 
@@ -199,7 +201,7 @@ _test_dir = os.path.join(_test_dir, 'test_data')
 data_filepath = os.path.join(_test_dir, 'reaction_test_data.out.rsmi')
 
 
-class ReactionInsertTestCase(unittest.TestCase):
+class ReactionTestCase(unittest.TestCase):
 
     def setUp(self):
         metadata.create_all()
@@ -207,7 +209,7 @@ class ReactionInsertTestCase(unittest.TestCase):
     def tearDown(self):
         metadata.drop_all()
 
-    def test_reaction_insert(self):
+    def test_reaction(self):
 
         self.assertTrue(os.path.exists(data_filepath))
 
@@ -309,3 +311,87 @@ class ReactionInsertTestCase(unittest.TestCase):
             )
         sum_agents = rs.fetchall()[0][0]
         self.assertEqual(sum_agents, 909)
+
+        rs = engine.execute(
+            select([func.count()]).select_from(reactions).where(
+                reactions.c.rxn.hassubstruct('c1ccccc1>>c1ccncc1')
+            )
+        )
+        self.assertEqual(rs.fetchall()[0][0], 47)
+
+        rs = engine.execute(
+            select([func.count()]).select_from(reactions).where(
+                reactions.c.rxn.hassubstruct('c1cnccc1>>c1ccccc1')
+            )
+        )
+        self.assertEqual(rs.fetchall()[0][0], 50)
+
+        rs = engine.execute(
+            select([func.count()]).select_from(reactions).where(
+                reactions.c.rxn.hassubstruct('c1ccccc1>>')
+            )
+        )
+        self.assertEqual(rs.fetchall()[0][0], 667)
+
+        rs = engine.execute(
+            select([func.count()]).select_from(reactions).where(
+                reactions.c.rxn.hassubstruct('c1cnccc1>>')
+            )
+        )
+        self.assertEqual(rs.fetchall()[0][0], 83)
+
+        rs = engine.execute(
+            select([func.count()]).select_from(reactions).where(
+                reactions.c.rxn.hassubstruct('>>c1ccncc1')
+            )
+        )
+        self.assertEqual(rs.fetchall()[0][0], 79)
+
+        rs = engine.execute(
+            select([func.count()]).select_from(reactions).where(
+                reactions.c.rxn.hassubstruct('>>c1ccccc1')
+            )
+        )
+        self.assertEqual(rs.fetchall()[0][0], 650)
+
+        rs = engine.execute(
+            select([func.count()]).select_from(reactions).where(
+                reactions.c.rxn.hassubstructfp('c1ccccc1>>c1ccncc1')
+            )
+        )
+        self.assertEqual(rs.fetchall()[0][0], 47)
+
+        rs = engine.execute(
+            select([func.count()]).select_from(reactions).where(
+                reactions.c.rxn.hassubstructfp('c1cnccc1>>c1ccccc1')
+            )
+        )
+        self.assertEqual(rs.fetchall()[0][0], 50)
+
+        rs = engine.execute(
+            select([func.count()]).select_from(reactions).where(
+                reactions.c.rxn.hassubstructfp('c1ccccc1>>')
+            )
+        )
+        self.assertEqual(rs.fetchall()[0][0], 667)
+
+        rs = engine.execute(
+            select([func.count()]).select_from(reactions).where(
+                reactions.c.rxn.hassubstructfp('c1cnccc1>>')
+            )
+        )
+        self.assertEqual(rs.fetchall()[0][0], 83)
+
+        rs = engine.execute(
+            select([func.count()]).select_from(reactions).where(
+                reactions.c.rxn.hassubstructfp('>>c1ccncc1')
+            )
+        )
+        self.assertEqual(rs.fetchall()[0][0], 79)
+
+        rs = engine.execute(
+            select([func.count()]).select_from(reactions).where(
+                reactions.c.rxn.hassubstructfp('>>c1ccccc1')
+            )
+        )
+        self.assertEqual(rs.fetchall()[0][0], 650)
