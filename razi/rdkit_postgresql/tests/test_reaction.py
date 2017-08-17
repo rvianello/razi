@@ -277,3 +277,35 @@ class ReactionInsertTestCase(unittest.TestCase):
             )
         sum_reactants = rs.fetchall()[0][0]
         self.assertEqual(sum_reactants, 3517)
+
+        rs = engine.execute(
+            select([
+                func.sum(func.reaction_numproducts(reactions.c.rxn))
+                ])
+            )
+        sum_products = rs.fetchall()[0][0]
+        self.assertEqual(sum_products, 1157)
+
+        rs = engine.execute(
+            select([
+                func.sum(func.reaction_numproducts(reactions_unchanged.c.rxn))
+                ])
+            )
+        sum_products = rs.fetchall()[0][0]
+        self.assertEqual(sum_products, 1157)
+
+        rs = engine.execute(
+            select([
+                func.sum(func.reaction_numagents(reactions.c.rxn))
+                ])
+            )
+        sum_agents = rs.fetchall()[0][0]
+        self.assertEqual(sum_agents, 2528)
+
+        rs = engine.execute(
+            select([
+                func.sum(func.reaction_numagents(reactions_unchanged.c.rxn))
+                ])
+            )
+        sum_agents = rs.fetchall()[0][0]
+        self.assertEqual(sum_agents, 909)
