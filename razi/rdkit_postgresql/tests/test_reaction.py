@@ -395,3 +395,147 @@ class ReactionTestCase(unittest.TestCase):
             )
         )
         self.assertEqual(rs.fetchall()[0][0], 650)
+
+        rs = engine.execute(
+            select([
+                func.tanimoto_sml(
+                    func.reaction_difference_fp('c1ccccc1>>c1ccncc1',1),
+                    func.reaction_difference_fp('c1ccccc1>>c1ccncc1',1))
+            ])
+        )
+        self.assertEqual(rs.fetchall()[0][0], 1.0)
+
+        rs = engine.execute(
+            select([
+                func.tanimoto_sml(
+                    func.reaction_difference_fp('c1ccccc1>>c1ccncc1',1),
+                    func.reaction_difference_fp('c1ncccc1>>c1ncncc1',1))
+            ])
+        )
+        self.assertAlmostEqual(rs.fetchall()[0][0], 0.636363636363636)
+
+        rs = engine.execute(
+            select([
+                func.tanimoto_sml(
+                    func.reaction_difference_fp('c1ccccc1>CC(=O)O.[Na+]>c1ccncc1',1),
+                    func.reaction_difference_fp('c1ccccc1>CC(=O)O.[Na+]>c1ccncc1',1))
+            ])
+        )
+        self.assertEqual(rs.fetchall()[0][0], 1.0)
+
+        rs = engine.execute(
+            select([
+                func.tanimoto_sml(
+                    func.reaction_difference_fp('c1ccccc1>CC(=O)O.[Na+]>c1ccncc1',1),
+                    func.reaction_difference_fp('c1ncccc1>[Na+]>c1ncncc1',1))
+            ])
+        )
+        self.assertAlmostEqual(rs.fetchall()[0][0], 0.603448275862069)
+
+        rs = engine.execute(
+            select([
+                func.tanimoto_sml(
+                    func.reaction_difference_fp('c1ccccc1>>c1ccncc1',2),
+                    func.reaction_difference_fp('c1ccccc1>>c1ccncc1',2))
+            ])
+        )
+        self.assertEqual(rs.fetchall()[0][0], 1.0)
+
+        rs = engine.execute(
+            select([
+                func.tanimoto_sml(
+                    func.reaction_difference_fp('c1ccccc1>>c1ccncc1',2),
+                    func.reaction_difference_fp('c1ncccc1>>c1ncncc1',2))
+            ])
+        )
+        self.assertAlmostEqual(rs.fetchall()[0][0], 0.2)
+
+        rs = engine.execute(
+            select([
+                func.tanimoto_sml(
+                    func.reaction_difference_fp('c1ccccc1>CC(=O)O.[Na+]>c1ccncc1',2),
+                    func.reaction_difference_fp('c1ccccc1>CC(=O)O.[Na+]>c1ccncc1',2))
+            ])
+        )
+        self.assertEqual(rs.fetchall()[0][0], 1.0)
+
+        rs = engine.execute(
+            select([
+                func.tanimoto_sml(
+                    func.reaction_difference_fp('c1ccccc1>CC(=O)O.[Na+]>c1ccncc1',2),
+                    func.reaction_difference_fp('c1ncccc1>[Na+]>c1ncncc1',2))
+            ])
+        )
+        self.assertAlmostEqual(rs.fetchall()[0][0], 0.2)
+
+        rs = engine.execute(
+            select([
+                func.tanimoto_sml(
+                    func.reaction_difference_fp('c1ccccc1>>c1ccncc1',3),
+                    func.reaction_difference_fp('c1ccccc1>>c1ccncc1',3))
+            ])
+        )
+        self.assertEqual(rs.fetchall()[0][0], 1.0)
+
+        rs = engine.execute(
+            select([
+                func.tanimoto_sml(
+                    func.reaction_difference_fp('c1ccccc1>>c1ccncc1',3),
+                    func.reaction_difference_fp('c1ncccc1>>c1ncncc1',3))
+            ])
+        )
+        self.assertAlmostEqual(rs.fetchall()[0][0], 0.454545454545455)
+
+        rs = engine.execute(
+            select([
+                func.tanimoto_sml(
+                    func.reaction_difference_fp('c1ccccc1>CC(=O)O.[Na+]>c1ccncc1',3),
+                    func.reaction_difference_fp('c1ccccc1>CC(=O)O.[Na+]>c1ccncc1',3))
+            ])
+        )
+        self.assertEqual(rs.fetchall()[0][0], 1.0)
+
+        rs = engine.execute(
+            select([
+                func.tanimoto_sml(
+                    func.reaction_difference_fp('c1ccccc1>CC(=O)O.[Na+]>c1ccncc1',3),
+                    func.reaction_difference_fp('c1ncccc1>[Na+]>c1ncncc1',3))
+            ])
+        )
+        self.assertAlmostEqual(rs.fetchall()[0][0], 0.444933920704846)
+
+        rs = engine.execute(
+            select([
+                func.tanimoto_sml(
+                    func.reaction_structural_bfp('c1ccccc1>>c1ccncc1',1),
+                    func.reaction_structural_bfp('c1ccccc1>>c1ccncc1',1))
+            ])
+        )
+        self.assertEqual(rs.fetchall()[0][0], 1.0)
+
+        rs = engine.execute(
+            select([
+                func.tanimoto_sml(
+                    func.reaction_structural_bfp('c1ccccc1>>c1ccncc1',1),
+                    func.reaction_structural_bfp('c1ncccc1>>c1ncncc1',1))
+            ])
+        )
+        self.assertAlmostEqual(rs.fetchall()[0][0], 0.620689655172414)
+
+        rs = engine.execute(
+            select([
+                func.tanimoto_sml(
+                    func.reaction_structural_bfp('c1ccccc1>CC(=O)O.[Na+]>c1ccncc1',1),
+                    func.reaction_structural_bfp('c1ccccc1>CC(=O)O.[Na+]>c1ccncc1',1))
+            ])
+        )
+        self.assertEqual(rs.fetchall()[0][0], 1.0)
+
+        rs = engine.execute(
+            select([
+                func.tanimoto_sml(
+                    func.reaction_structural_bfp('c1ccccc1>CC(=O)O.[Na+]>c1ccncc1',1),
+                    func.reaction_structural_bfp('c1ncccc1>[Na+]>c1ncncc1',1))
+            ])
+        )
+        self.assertAlmostEqual(rs.fetchall()[0][0], 0.514285714285714)
