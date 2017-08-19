@@ -1,18 +1,19 @@
 Column and Data Types
 =====================
 
-.. module:: razi.chemtypes
+.. module:: razi.rdkit_postgresql.types
 
-.. autoclass:: Molecule
+.. autoclass:: Mol
     :members:
 
-.. autoclass:: QMolecule
+.. autoclass:: QMol
     :members:
 
-.. autoclass:: BitFingerprint
+.. autoclass:: Bfp
     :members:
 
-.. autoclass:: CntFingerprint
+.. autoclass:: Sfp
     :members:
 
-
+.. autoclass:: Reaction
+    :members:
