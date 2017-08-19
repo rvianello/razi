@@ -14,7 +14,6 @@ Contents:
    introduction
    tutorials
    api
-   database_setup
 
 Indices and tables
 ==================
@@ -22,4 +21,3 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-
