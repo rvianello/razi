@@ -1,4 +1,5 @@
 Functions
 =========
 
-.. module:: razi.rdkit_postgresql.functions
+.. automodule:: razi.rdkit_postgresql.functions
+    :members:
