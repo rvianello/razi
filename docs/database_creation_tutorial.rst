@@ -26,7 +26,7 @@ Then, create a new database and configure it to use the RDKit extension::
     CREATE EXTENSION
     razi_tutorial=# \q
 
-*The database username and password, together with the name of the database itself, are most likely to differ in your case. Please replace them with the values appropriate to your work environment.* 
+*The database username and password, together with the name of the database itself, are most likely to differ in your case. Please replace them with the values appropriate to your work environment.*
 
 Connection to the database
 --------------------------
@@ -52,16 +52,20 @@ For this tutorial we only need one single database entity, mapped to a python cl
 
 then, the definition of the mapped entity follows::
 
-    from sqlalchemy import Column, Integer, String
-    from razi.orm import ChemColumn
-    from razi.chemtypes import Molecule
+    from sqlalchemy import Column, Index, Integer, String
+    from razi.rdkit_postgresql.types import Mol
 
     class Compound(Base):
-        __tablename__='compounds'
+        __tablename__ = 'compounds'
 
         id = Column(Integer, primary_key=True)
         name = Column(String)
-        structure = ChemColumn(Molecule)
+        structure = Column(Mol)
+
+        __table_args__ = (
+            Index('compounds_structure', 'structure',
+                  postgresql_using='gist'),
+            )
 
         def __init__(self, name, structure):
             self.name = name
@@ -74,9 +78,7 @@ to actually create the database schema, a method of the ``Base`` class ``metadat
 
     Base.metadata.create_all()
 
-In the present case this last command creates a table named ``compounds`` with columns ``id``, ``name`` and ``structure`` and also implicitly includes the creation of a structural index on the column with type :class:`~razi.chemtypes.Molecule`.
-
-Please notice that differently from ``id`` and ``name``, which are defined as plain SQLAlchemy ``Column`` attributes, ``structure`` is defined by a ``ChemColumn``.
+In the present case this last command creates a table named ``compounds`` with columns ``id``, ``name`` and ``structure``, and it also includes the creation of a structural index on the column with type :class:`~razi.rdkit_postgresql.types.Mol`.
 
 Inserting data
 --------------
