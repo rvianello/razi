@@ -4,10 +4,10 @@ Razi provides extensions to SQLAlchemy to work with chemical databases. Currentl
 
 Installation
 ^^^^^^^^^^^^
-Source code is available on `GitHub <https://github.com/rvianello/razi>`_. Either clone the repository or download a source package, change into the razi directory and type the following command (since the project is still in its earlier development phases, you may want to use a virtualenv)::
+Source code is available on `GitHub <https://github.com/rvianello/razi>`_. Either clone the repository or download a source package, change into the razi directory and type the following command::
 
     $ python setup.py install
-    
+
 
 Documentation
 ^^^^^^^^^^^^^
@@ -16,4 +16,3 @@ This documentation is available from http://razi.readthedocs.org/.
 License
 ^^^^^^^
 Razi is released under the MIT License.
- 
