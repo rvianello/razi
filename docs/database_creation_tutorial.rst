@@ -85,15 +85,15 @@ Inserting data
 
 The data from ChEMBL is formatted as a csv file, tab-separated and beginning with a header line::
 
-    $ head -n3  chembl_08_chemreps.txt
-    chembl_id	chebi_id	molweight	canonical_smiles	inchi	inchi_key
-     CHEMBL6582	100733	268.09877	NC(=O)c1cc(nnc1Cl)c2ccc(Cl)cc2	InChI=1/C11H7Cl2N3 <snip>
-     CHEMBL6583	100744	342.41542	CN(C)c1cccc2c(cccc12)S(=O)(=O)Nc3cnc(C)cn3	In <snip>
+    $ head -n3  chembl_23_chemreps.txt
+    chembl_id	canonical_smiles	standard_inchi	standard_inchi_key
+    CHEMBL153534	Cc1cc(cn1C)c2csc(N=C(N)N)n2	InChI=1S/C10H13N5S/c1-6-3-7(4-15(6)2)8-5 <snip>
+    CHEM1BL440060	CC[C@H](C)[C@H](NC(=O)[C@H](CC(C)C)NC(=O)[C@@H](NC(=O)[C@@H](N)CCSC) <snip>
 
 To semplify the processing of these data records we define a namedtuple matching the input format::
 
     from collections import namedtuple
-    Record = namedtuple('Record', 'chembl_id, chebi_id, mw, smiles, inchi, inchi_key')
+    Record = namedtuple('Record', 'chembl_id, smiles, inchi, inchi_key')
 
 During this tutorial only a portion of the whole database is actually imported, and at the same time we want to make sure that troublesome SMILES strings are skipped (SMILES containing errors, compounds that are too big and/or other strings that the RDKit cartridge won't be able to process). File parsing and data filtering can therefore be performed with a function similar to the following::
 
@@ -102,24 +102,24 @@ During this tutorial only a portion of the whole database is actually imported, 
 
     def read_chembldb(filepath, limit=0):
 
-        inputfile = open(filepath, 'rb')
-        reader = csv.reader(inputfile, delimiter='\t', skipinitialspace=True)
-        reader.next() # skip header line
+        with open(filepath, 'rt') as inputfile:
+            reader = csv.reader(inputfile, delimiter='\t', skipinitialspace=True)
+            next(reader) # skip header
 
-        for count, record in enumerate(map(Record._make, reader), 1):
+            for count, record in enumerate(map(Record._make, reader), 1):
 
-	    smiles = record.smiles
+                smiles = record.smiles
 
-            # skip problematic compounds
-            if len(smiles) > 300: continue
-            smiles = smiles.replace('=N#N','=[N+]=[N-]')
-            smiles = smiles.replace('N#N=','[N-]=[N+]=')
-            if not Chem.MolFromSmiles(smiles): continue
+                # skip problematic smiles
+                if len(smiles) > 300: continue
+                smiles = smiles.replace('=N#N','=[N+]=[N-]')
+                smiles = smiles.replace('N#N=','[N-]=[N+]=')
+                if not Chem.MolFromSmiles(smiles):
+                    continue
 
-            yield count, record.chembl_id, smiles
-
-            if count == limit:
-	        break
+                yield count, record.chembl_id, smiles
+                if count == limit:
+                    break
 
 The ``read_chembldb`` function above is a python generator, producing for each valid record a python tuple containing the record counter and the ``chembl_id`` and ``smiles`` strings.
 
