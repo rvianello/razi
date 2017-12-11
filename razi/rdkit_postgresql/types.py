@@ -20,6 +20,8 @@ class Mol(UserDefinedType):
             # db driver
             if isinstance(value, Chem.Mol):
                 value = memoryview(value.ToBinary())
+            elif isinstance(value, str):
+                value = memoryview(Chem.MolFromSmiles(value).ToBinary())
             return value
         return process
 
