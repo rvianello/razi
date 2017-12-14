@@ -33,7 +33,7 @@ class BfpComparator(UserDefinedType.Comparator):
 
     def tanimoto_sml(self, other):
         return self.operate(
-            operators.custom_op('%'), other, result_type=sqltypes.Boolean
+            operators.custom_op('%%'), other, result_type=sqltypes.Boolean
             )
 
     def dice_sml(self, other):
