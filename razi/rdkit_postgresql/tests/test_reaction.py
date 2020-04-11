@@ -1,7 +1,7 @@
 import os
 import unittest
 
-from sqlalchemy import create_engine, MetaData
+from sqlalchemy import MetaData
 from sqlalchemy import select, func, bindparam
 from sqlalchemy import Table, Column, Integer, Index
 
@@ -9,8 +9,8 @@ from rdkit.Chem import AllChem as Chem
 
 from razi.rdkit_postgresql.types import Reaction
 
+from .database import engine
 
-engine = create_engine('postgresql://localhost/razi-rdkit-postgresql-test')
 
 sys_metadata = MetaData(engine)
 pg_settings = Table('pg_settings', sys_metadata,
@@ -63,7 +63,7 @@ class ReactionBasicTestCase(unittest.TestCase):
         rs = engine.execute(
             select([func.reaction_from_smarts('c1ccc[n,c]c1>>c1nccnc1')])
             )
-        self.assertEqual(rs.fetchall()[0][0], 'c1ccncc1>>c1cnccn1')
+        self.assertEqual(rs.fetchall()[0][0], '*1ccccc1>>c1cnccn1')
 
         rs = engine.execute(
             select([func.reaction_to_smiles(func.reaction_from_smiles('c1ccccc1>>c1cccnc1'))])

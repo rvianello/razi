@@ -1,14 +1,13 @@
 import unittest
 
 from sqlalchemy import select, func
-from sqlalchemy import create_engine
 
 from rdkit.Chem import AllChem as Chem
 
 from razi.rdkit_postgresql.types import Mol
 
+from .database import engine
 
-engine = create_engine('postgresql://localhost/razi-rdkit-postgresql-test')
 
 class InChITestCase(unittest.TestCase):
 

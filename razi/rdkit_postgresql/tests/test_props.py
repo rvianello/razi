@@ -1,14 +1,13 @@
 import unittest
 
 from sqlalchemy import select, func
-from sqlalchemy import create_engine
 
 from rdkit.Chem import AllChem as Chem
 
 from razi.rdkit_postgresql.types import Mol
 
+from .database import engine
 
-engine = create_engine('postgresql://localhost/razi-rdkit-postgresql-test')
 
 class PropsTestCase(unittest.TestCase):
 
@@ -28,45 +27,45 @@ class PropsTestCase(unittest.TestCase):
 
 
         rs = engine.execute(select([ func.mol_chi0n(func.mol('c1ccccc1O')) ]))
-        self.assertAlmostEqual(rs.fetchall()[0][0], 3.83396)
+        self.assertAlmostEqual(rs.fetchall()[0][0], 3.8339648)
 
         rs = engine.execute(select([ func.mol_chi1n(func.mol('c1ccccc1O')) ]))
-        self.assertAlmostEqual(rs.fetchall()[0][0], 2.13429)
+        self.assertAlmostEqual(rs.fetchall()[0][0], 2.1342905)
 
         rs = engine.execute(select([ func.mol_chi2n(func.mol('c1ccccc1O')) ]))
-        self.assertAlmostEqual(rs.fetchall()[0][0], 1.33555)
+        self.assertAlmostEqual(rs.fetchall()[0][0], 1.3355491)
 
         rs = engine.execute(select([ func.mol_chi3n(func.mol('c1ccccc1O')) ]))
-        self.assertAlmostEqual(rs.fetchall()[0][0], 0.756194)
+        self.assertAlmostEqual(rs.fetchall()[0][0], 0.7561936)
 
         rs = engine.execute(select([ func.mol_chi4n(func.mol('c1ccccc1O')) ]))
-        self.assertAlmostEqual(rs.fetchall()[0][0], 0.427994)
+        self.assertAlmostEqual(rs.fetchall()[0][0], 0.4279941)
 
 
         rs = engine.execute(select([ func.mol_chi0v(func.mol('c1ccccc1O')) ]))
-        self.assertAlmostEqual(rs.fetchall()[0][0], 3.83396)
+        self.assertAlmostEqual(rs.fetchall()[0][0], 3.8339648)
 
         rs = engine.execute(select([ func.mol_chi1v(func.mol('c1ccccc1O')) ]))
-        self.assertAlmostEqual(rs.fetchall()[0][0], 2.13429)
+        self.assertAlmostEqual(rs.fetchall()[0][0], 2.1342905)
 
         rs = engine.execute(select([ func.mol_chi2v(func.mol('c1ccccc1O')) ]))
-        self.assertAlmostEqual(rs.fetchall()[0][0], 1.33555)
+        self.assertAlmostEqual(rs.fetchall()[0][0], 1.3355491)
 
         rs = engine.execute(select([ func.mol_chi3v(func.mol('c1ccccc1O')) ]))
-        self.assertAlmostEqual(rs.fetchall()[0][0], 0.756194)
+        self.assertAlmostEqual(rs.fetchall()[0][0], 0.7561936)
 
         rs = engine.execute(select([ func.mol_chi4v(func.mol('c1ccccc1O')) ]))
-        self.assertAlmostEqual(rs.fetchall()[0][0], 0.427994)
+        self.assertAlmostEqual(rs.fetchall()[0][0], 0.4279941)
 
 
         rs = engine.execute(select([ func.mol_kappa1(func.mol('C12CC2C3CC13')) ]))
         self.assertAlmostEqual(rs.fetchall()[0][0], 2.34375)
 
         rs = engine.execute(select([ func.mol_kappa2(func.mol('CC(C)C1CCC(C)CCC1')) ]))
-        self.assertAlmostEqual(rs.fetchall()[0][0], 4.13265)
+        self.assertAlmostEqual(rs.fetchall()[0][0], 4.132653)
 
         rs = engine.execute(select([ func.mol_kappa3(func.mol('CC(C)C1CCC(C)CCC1')) ]))
-        self.assertAlmostEqual(rs.fetchall()[0][0], 2.84444)
+        self.assertAlmostEqual(rs.fetchall()[0][0], 2.8444445)
 
 
         rs = engine.execute(select([ func.mol_numspiroatoms(func.mol('CC1(C)CC2(C)CCC1(C)CC2')) ]))

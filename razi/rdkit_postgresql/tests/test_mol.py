@@ -3,15 +3,15 @@ import unittest
 import json
 
 from sqlalchemy import select, func
-from sqlalchemy import create_engine, MetaData
+from sqlalchemy import MetaData
 from sqlalchemy import Table, Column, Integer, Index
 
 from rdkit.Chem import AllChem as Chem
 
 from razi.rdkit_postgresql.types import Mol
 
+from .database import engine
 
-engine = create_engine('postgresql://localhost/razi-rdkit-postgresql-test')
 
 class MolBasicTestCase(unittest.TestCase):
 
@@ -100,7 +100,7 @@ M  END
         rs = engine.execute(
             select([ func.mol_to_smiles(func.qmol('c1cccc[n,c]1')) ])
         )
-        self.assertEqual(rs.fetchall()[0][0], 'c1ccncc1')
+        self.assertEqual(rs.fetchall()[0][0], '*1ccccc1')
 
     def test_mol_to_smarts(self):
 
