@@ -83,8 +83,6 @@ _FUNCTIONS = [
     # qmol constructors
     #
     ('qmol_from_smiles', types.QMol, None,),
-
-    ('qmol_from_smiles', types.QMol, None,),
     ('qmol_from_ctab', types.QMol, None,),
 
     #
