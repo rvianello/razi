@@ -106,18 +106,19 @@ class PropsTestCase(unittest.TestCase):
 
         rs = engine.execute(select([ func.mol_to_svg(func.mol('CCO')) ]))
         self.assertEqual(rs.fetchall()[0][0], '''<?xml version='1.0' encoding='iso-8859-1'?>
-<svg:svg version='1.1' baseProfile='full'
-              xmlns:svg='http://www.w3.org/2000/svg'
+<svg version='1.1' baseProfile='full'
+              xmlns='http://www.w3.org/2000/svg'
                       xmlns:rdkit='http://www.rdkit.org/xml'
                       xmlns:xlink='http://www.w3.org/1999/xlink'
                   xml:space='preserve'
-width='250px' height='200px' >
-<svg:rect style='opacity:1.0;fill:#FFFFFF;stroke:none' width='250' height='200' x='0' y='0'> </svg:rect>
-<svg:path d='M 11.3636,124.362 95.7545,75.6385' style='fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
-<svg:path d='M 95.7545,75.6385 131.455,96.25' style='fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
-<svg:path d='M 131.455,96.25 167.155,116.862' style='fill:none;fill-rule:evenodd;stroke:#FF0000;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
-<svg:text x='166.64' y='131.862' style='font-size:15px;font-style:normal;font-weight:normal;fill-opacity:1;stroke:none;font-family:sans-serif;text-anchor:start;fill:#FF0000' ><svg:tspan>OH</svg:tspan></svg:text>
-</svg:svg>
+width='250px' height='200px' viewBox='0 0 250 200'>
+<!-- END OF HEADER -->
+<rect style='opacity:1.0;fill:#FFFFFF;stroke:none' width='250' height='200' x='0' y='0'> </rect>
+<path class='bond-0' d='M 11.3636,117.403 L 101.79,65.195' style='fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<path class='bond-1' d='M 101.79,65.195 L 138.876,86.6068' style='fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<path class='bond-1' d='M 138.876,86.6068 L 175.962,108.019' style='fill:none;fill-rule:evenodd;stroke:#FF0000;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<text dominant-baseline="central" text-anchor="start" x='179.443' y='122.623' style='font-size:34px;font-style:normal;font-weight:normal;fill-opacity:1;stroke:none;font-family:sans-serif;fill:#FF0000' ><tspan>OH</tspan></text>
+</svg>
 ''')
 
     maxDiff = None
