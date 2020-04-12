@@ -4,7 +4,7 @@ from sqlalchemy import select, func
 
 from rdkit.Chem import AllChem as Chem
 
-from razi.rdkit_postgresql.types import Mol
+from razi import rdkit_postgresql
 
 from .database import engine
 
