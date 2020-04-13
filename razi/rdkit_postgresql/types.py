@@ -1,5 +1,5 @@
 from sqlalchemy import func
-from sqlalchemy.types import UserDefinedType, TypeEngine
+from sqlalchemy.types import UserDefinedType
 
 from rdkit.Chem import AllChem as Chem
 from rdkit import DataStructs
