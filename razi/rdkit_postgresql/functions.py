@@ -26,6 +26,7 @@ _FUNCTIONS = [
     #
 
     ('mol_to_smiles', sqltypes.String, None,), # also supports qmol input
+    ('mol_to_cxsmiles', sqltypes.String, None,),
     ('mol_to_smarts', sqltypes.String, None,), # also supports qmol input
     ('mol_to_ctab', sqltypes.String, None,),
     ('mol_to_svg', sqltypes.String, None,),
@@ -77,7 +78,7 @@ _FUNCTIONS = [
     ('mol_inchi', sqltypes.String, None,),
     ('mol_inchikey', sqltypes.String, None,),
     ('mol_murckoscaffold', sqltypes.String, None,),
-    ('mol_hash', sqltypes.String, None,),
+    ('mol_nm_hash', sqltypes.String, None,),
 
     #
     # qmol constructors
@@ -148,6 +149,7 @@ _FUNCTIONS = [
     ('reaction_to_smiles', sqltypes.String, None,),
     ('reaction_to_smarts', sqltypes.String, None,),
     ('reaction_to_ctab', sqltypes.String, None,),
+    ('reaction_to_svg', sqltypes.String, None,),
 
     #
     # reaction descriptors
@@ -177,6 +179,10 @@ _FUNCTIONS = [
     ('is_valid_smarts', sqltypes.Boolean, None,),
     ('is_valid_ctab', sqltypes.Boolean, None,),
     ('is_valid_mol_pkl', sqltypes.Boolean, None,),
+
+    #
+    # substructure search
+    #
     ('substruct_count', sqltypes.Integer, None,),
 
 ]
