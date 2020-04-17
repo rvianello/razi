@@ -9,12 +9,13 @@
 	
 	// Set *default* container specific settings.json values on container create.
 	"settings": { 
-		"terminal.integrated.shell.linux": "/bin/bash"
+		"terminal.integrated.shell.linux": "/bin/bash",
 	},
 
 	// Add the IDs of extensions you want installed when the container is created.
 	"extensions": [
-		"ms-azuretools.vscode-docker"
+		"ms-azuretools.vscode-docker",
+		"ms-python.python"
 	]
 
 	// Uncomment the next line if you want start specific services in your Docker Compose config.

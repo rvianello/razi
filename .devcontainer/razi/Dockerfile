@@ -32,21 +32,17 @@ RUN \
     # Install Docker Compose
     # && curl -sSL "https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
     # && chmod +x /usr/local/bin/docker-compose
-    && dnf install -y docker-compose \
+    && dnf install -y docker-compose python3-virtualenvwrapper \
     #
     # Create a non-root user to use if preferred - see https://aka.ms/vscode-remote/containers/non-root-user.
     && groupadd --gid $USER_GID $USERNAME \
     && useradd -s /bin/bash --uid $USER_UID --gid $USER_GID -m $USERNAME \
     # [Optional] Add sudo support for the non-root user
     && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME\
-    && chmod 0440 /etc/sudoers.d/$USERNAME \
-    && mkdir -p /opt/venv \
-    && chown -R ${USER_UID}:${USER_GID} /opt/venv
+    && chmod 0440 /etc/sudoers.d/$USERNAME
 
 USER ${USERNAME}
 
-RUN python3 -m venv --system-site-packages --clear /opt/venv \
-    && source /opt/venv/bin/activate \
-    && pip install ipython
+RUN source /usr/bin/virtualenvwrapper.sh && mkvirtualenv -i ipython --system-site-packages razi
 
 
