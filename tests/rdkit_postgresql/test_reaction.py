@@ -194,7 +194,7 @@ reactions_unchanged = Table(
 
 
 _test_dir = os.path.dirname(__file__)
-for _ in range(3):
+for _ in range(2):
     _test_dir = os.path.dirname(_test_dir)
 _test_dir = os.path.join(_test_dir, 'test_data')
 
