@@ -1,5 +1,6 @@
 *.py[co]
 *~
+dist/
 build/
 razi.egg-info/
 docs/_*
