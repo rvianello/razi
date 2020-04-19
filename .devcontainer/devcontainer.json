@@ -15,7 +15,8 @@
 	// Add the IDs of extensions you want installed when the container is created.
 	"extensions": [
 		"ms-azuretools.vscode-docker",
-		"ms-python.python"
+		"ms-python.python",
+		"lextudio.restructuredtext"
 	]
 
 	// Uncomment the next line if you want start specific services in your Docker Compose config.
