@@ -23,7 +23,9 @@ ARG USER_GID=$USER_UID
 # Configure apt and install packages
 RUN \
     # Install various tools \
-    dnf install -y curl dnf-plugins-core git less postgresql which \
+    dnf install -y curl dnf-plugins-core git less postgresql python3-ipython \
+        python3-docutils python3-rstcheck python3-sqlalchemy python3-sphinx python3-psycopg2 \
+        twine which \
     # Install Docker CE CLI
     && dnf config-manager \
         --add-repo \
@@ -32,7 +34,7 @@ RUN \
     # Install Docker Compose
     # && curl -sSL "https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
     # && chmod +x /usr/local/bin/docker-compose
-    && dnf install -y docker-compose python3-virtualenvwrapper \
+    && dnf install -y docker-compose \
     #
     # Create a non-root user to use if preferred - see https://aka.ms/vscode-remote/containers/non-root-user.
     && groupadd --gid $USER_GID $USERNAME \
@@ -42,7 +44,5 @@ RUN \
     && chmod 0440 /etc/sudoers.d/$USERNAME
 
 USER ${USERNAME}
-
-RUN source /usr/bin/virtualenvwrapper.sh && mkvirtualenv -i ipython --system-site-packages razi
 
 
