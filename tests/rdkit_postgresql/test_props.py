@@ -113,11 +113,43 @@ class PropsTestCase(unittest.TestCase):
                   xml:space='preserve'
 width='250px' height='200px' viewBox='0 0 250 200'>
 <!-- END OF HEADER -->
-<rect style='opacity:1.0;fill:#FFFFFF;stroke:none' width='250' height='200' x='0' y='0'> </rect>
-<path class='bond-0' d='M 11.3636,117.403 L 101.79,65.195' style='fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
-<path class='bond-1' d='M 101.79,65.195 L 138.876,86.6068' style='fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
-<path class='bond-1' d='M 138.876,86.6068 L 175.962,108.019' style='fill:none;fill-rule:evenodd;stroke:#FF0000;stroke-width:2px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
-<text dominant-baseline="central" text-anchor="start" x='179.443' y='122.623' style='font-size:34px;font-style:normal;font-weight:normal;fill-opacity:1;stroke:none;font-family:sans-serif;fill:#FF0000' ><tspan>OH</tspan></text>
+<rect style='opacity:1.0;fill:#FFFFFF;stroke:none' width='250.0' height='200.0' x='0.0' y='0.0'> </rect>
+<path class='bond-0 atom-0 atom-1' d='M 11.4,121.0 L 107.5,65.5' style='fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.0px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<path class='bond-1 atom-1 atom-2' d='M 107.5,65.5 L 147.7,88.7' style='fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:2.0px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<path class='bond-1 atom-1 atom-2' d='M 147.7,88.7 L 187.8,111.9' style='fill:none;fill-rule:evenodd;stroke:#FF0000;stroke-width:2.0px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1' />
+<path  class='atom-2' d='M 190.6 121.1
+Q 190.6 114.3, 194.0 110.5
+Q 197.3 106.7, 203.6 106.7
+Q 209.9 106.7, 213.2 110.5
+Q 216.6 114.3, 216.6 121.1
+Q 216.6 128.0, 213.2 131.9
+Q 209.8 135.8, 203.6 135.8
+Q 197.4 135.8, 194.0 131.9
+Q 190.6 128.0, 190.6 121.1
+M 203.6 132.6
+Q 207.9 132.6, 210.2 129.7
+Q 212.6 126.8, 212.6 121.1
+Q 212.6 115.6, 210.2 112.8
+Q 207.9 109.9, 203.6 109.9
+Q 199.3 109.9, 196.9 112.7
+Q 194.6 115.5, 194.6 121.1
+Q 194.6 126.8, 196.9 129.7
+Q 199.3 132.6, 203.6 132.6
+' fill='#FF0000'/>
+<path  class='atom-2' d='M 220.0 107.0
+L 223.8 107.0
+L 223.8 119.1
+L 238.3 119.1
+L 238.3 107.0
+L 242.2 107.0
+L 242.2 135.4
+L 238.3 135.4
+L 238.3 122.3
+L 223.8 122.3
+L 223.8 135.4
+L 220.0 135.4
+L 220.0 107.0
+' fill='#FF0000'/>
 </svg>
 ''')
 

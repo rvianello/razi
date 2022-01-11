@@ -53,12 +53,12 @@ class ReactionBasicTestCase(unittest.TestCase):
         rs = engine.execute(
             select([func.reaction_from_smarts('[c1:1][c:2][c:3][c:4]c[c1:5]>CC(=O)O>[c1:1][c:2][c:3][c:4]n[c1:5]')])
             )
-        self.assertEqual(rs.fetchall()[0][0], 'c([cH:4][cH:3][cH:2][cH2:1])[cH2:5]>CC(=O)O>n([cH:4][cH:3][cH:2][cH2:1])[cH2:5]')
+        self.assertEqual(rs.fetchall()[0][0], 'c([c:4][c:3][c:2][c:1])[c:5]>CC(O)=O>n([c:4][c:3][c:2][c:1])[c:5]')
 
         rs = engine.execute(
             select([func.reaction_from_smarts('C(F)(F)F.[c1:1][c:2][c:3][c:4]c[c1:5]>CC(=O)O>[c1:1][c:2][c:3][c:4]n[c1:5]')])
             )
-        self.assertEqual(rs.fetchall()[0][0], 'c([cH:4][cH:3][cH:2][cH2:1])[cH2:5]>CC(=O)O.FC(F)F>n([cH:4][cH:3][cH:2][cH2:1])[cH2:5]')
+        self.assertEqual(rs.fetchall()[0][0], 'c([c:4][c:3][c:2][c:1])[c:5]>CC(O)=O.FC(F)F>n([c:4][c:3][c:2][c:1])[c:5]')
 
         rs = engine.execute(
             select([func.reaction_from_smarts('c1ccc[n,c]c1>>c1nccnc1')])
