@@ -189,7 +189,7 @@ _FUNCTIONS = [
 
 # Iterate through _FUNCTIONS and create GenericFunction classes dynamically
 for name, type_, doc in _FUNCTIONS:
-    attributes = {'name': name}
+    attributes = {'name': name, 'inherit_cache': True}
     docs = []
 
     if doc is not None:

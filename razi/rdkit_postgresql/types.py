@@ -9,6 +9,7 @@ from . import comparator
 
 class Mol(UserDefinedType):
 
+    cache_ok = True
     comparator_factory = comparator.MolComparator
 
     def get_col_spec(self, **kw):
@@ -45,6 +46,7 @@ class Mol(UserDefinedType):
 
 class QMol(UserDefinedType):
 
+    cache_ok = True
     comparator_factory = comparator.QMolComparator
 
     def get_col_spec(self, **kw):
@@ -53,6 +55,7 @@ class QMol(UserDefinedType):
 
 class Bfp(UserDefinedType):
 
+    cache_ok = True
     comparator_factory = comparator.BfpComparator
 
     def get_col_spec(self, **kw):
@@ -85,6 +88,7 @@ class Bfp(UserDefinedType):
 
 class Sfp(UserDefinedType):
 
+    cache_ok = True
     comparator_factory = comparator.SfpComparator
 
     def get_col_spec(self, **kw):
@@ -93,6 +97,7 @@ class Sfp(UserDefinedType):
 
 class Reaction(UserDefinedType):
 
+    cache_ok = True
     comparator_factory = comparator.ReactionComparator
 
     def get_col_spec(self, **kw):
