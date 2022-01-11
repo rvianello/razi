@@ -7,10 +7,7 @@
 #-------------------------------------------------------------------------------------------------------------
 
 # Note: You can use any Debian/Ubuntu based image you want. 
-FROM rvianello/fedora-rdkit-python:31-2020.03.1
-
-# Docker Compose version
-ARG COMPOSE_VERSION=1.24.0
+FROM rvianello/fedora-rdkit-python:35-2021.09.3
 
 # The image creates a non-root user with sudo access. Use the 
 # "remoteUser" property in devcontainer.json to use it. On Linux, update 
@@ -23,8 +20,9 @@ ARG USER_GID=$USER_UID
 # Configure apt and install packages
 RUN \
     # Install various tools \
-    dnf install -y curl dnf-plugins-core git less postgresql python3-ipython \
-        python3-docutils python3-rstcheck python3-sqlalchemy python3-sphinx python3-psycopg2 \
+    dnf install -y curl dnf-plugins-core git less libpq python3-ipython \
+        python3-docutils python3-pylint python3-rstcheck \
+        python3-sqlalchemy python3-sphinx python3-psycopg2 \
         twine which \
     # Install Docker CE CLI
     && dnf config-manager \
@@ -32,8 +30,6 @@ RUN \
         https://download.docker.com/linux/fedora/docker-ce.repo \
     && dnf install -y docker-ce-cli \
     # Install Docker Compose
-    # && curl -sSL "https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-    # && chmod +x /usr/local/bin/docker-compose
     && dnf install -y docker-compose \
     #
     # Create a non-root user to use if preferred - see https://aka.ms/vscode-remote/containers/non-root-user.
