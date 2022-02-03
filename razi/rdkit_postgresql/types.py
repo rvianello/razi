@@ -1,11 +1,13 @@
 from sqlalchemy import func
 from sqlalchemy.types import UserDefinedType
+from sqlalchemy.dialects.postgresql.base import ischema_names
 
 from rdkit.Chem import AllChem as Chem
 from rdkit import DataStructs
 from rdkit.DataStructs import ExplicitBitVect
 
 from . import comparator
+
 
 class Mol(UserDefinedType):
 
@@ -102,3 +104,13 @@ class Reaction(UserDefinedType):
 
     def get_col_spec(self, **kw):
         return 'reaction'
+
+
+# register RDKit types to PostgreSQL dialect, so that SQLAlchemy relfect infrastructure works properly
+ischema_names.update({
+    'mol': Mol,
+    'qmol': QMol,
+    'bfp': Bfp,
+    'sfp': Sfp,
+    'reaction': Reaction,
+})
