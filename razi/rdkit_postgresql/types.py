@@ -54,6 +54,20 @@ class QMol(UserDefinedType):
     def get_col_spec(self, **kw):
         return 'qmol'
 
+    def bind_processor(self, dialect):
+        def process(value):
+            # convert the Molecule instance to the value used by the
+            # db driver
+            if isinstance(value, Chem.Mol):
+                return Chem.MolToSmarts(value)
+            elif isinstance(value, str):
+                return value
+            else:
+                raise RuntimeError(
+                    'Unexpected query value type for QMol column')
+
+        return process
+
 
 class Bfp(UserDefinedType):
 
