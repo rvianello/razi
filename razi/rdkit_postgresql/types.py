@@ -1,4 +1,5 @@
 from sqlalchemy import func
+from sqlalchemy.sql import operators
 from sqlalchemy.types import UserDefinedType
 from sqlalchemy.dialects.postgresql.base import ischema_names
 
@@ -54,19 +55,11 @@ class QMol(UserDefinedType):
     def get_col_spec(self, **kw):
         return 'qmol'
 
-    def bind_processor(self, dialect):
-        def process(value):
-            # convert the Molecule instance to the value used by the
-            # db driver
-            if isinstance(value, Chem.Mol):
-                return Chem.MolToSmarts(value)
-            elif isinstance(value, str):
-                return value
-            else:
-                raise RuntimeError(
-                    'Unexpected query value type for QMol column')
-
-        return process
+    def coerce_compared_value(self, op, value):
+        if isinstance(op, operators.custom_op) and op.opstring == '<@':
+            return Mol()
+        else:
+            return self
 
 
 class Bfp(UserDefinedType):
