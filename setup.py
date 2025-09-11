@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(name='razi',
-    version='0.0.0',
+    version='0.1.0',
     description='Using SQLAlchemy with chemical databases',
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -25,7 +25,8 @@ setuptools.setup(name='razi',
         'tests', 'tests.*',
     ]),
     install_requires=[
-        'SQLAlchemy>=0.7.0',
+        'SQLAlchemy>=2.0.0',
+        'rdkit>=2022.9.4'
     ],
     python_requires='>=3.6',
 )
