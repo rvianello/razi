@@ -40,6 +40,8 @@ class Mol(UserDefinedType):
                 return value
             elif isinstance(value, memoryview):
                 return Chem.Mol(bytes(value))
+            elif isinstance(value, str):
+                value = memoryview(Chem.MolFromSmiles(value).ToBinary())
             else:
                 raise RuntimeError(
                     "Unexpected row value type for a Mol instance")
@@ -96,6 +98,8 @@ class Bfp(UserDefinedType):
                 return value
             elif isinstance(value, memoryview):
                 return DataStructs.CreateFromBinaryText(bytes(value))
+            elif isinstance(value, bytes):
+                return DataStructs.CreateFromBinaryText(value)
             else:
                 raise RuntimeError(
                     "Unexpected row value type for a Bfp instance")
